@@ -1,7 +1,7 @@
 using System.Text;
 using MurmurHash.Net;
 
-namespace Storage.Extensions;
+namespace Core.Extensions;
 
 public static class StringHashingExtenstion
 {

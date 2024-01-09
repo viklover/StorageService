@@ -2,9 +2,7 @@ using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Diagnostics;
 
-using Application.Api.Storage.Exceptions;
-
-namespace Application.Api.Storage;
+namespace Api.Exceptions;
 
 public class StorageExceptionHandler
 {

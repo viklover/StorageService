@@ -1,5 +1,5 @@
-using Application.Api.Storage;
-using Application.Services.Storage;
+using Api.Exceptions;
+using Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +8,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // temporarily no data structure yet
-builder.Services.AddSingleton<IStorageService, FakeStorageService>();
+builder.Services.ConfigureApplicationServices();
 
 var app = builder.Build();
 
