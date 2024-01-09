@@ -5,5 +5,9 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="MurmurHash.Net" Version="0.0.2" />
+    </ItemGroup>
 
 </Project>
