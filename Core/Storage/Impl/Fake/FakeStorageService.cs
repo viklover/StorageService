@@ -1,4 +1,4 @@
-namespace Application.Services.Storage;
+namespace Core.Storage.Impl.Fake;
 
 public class FakeStorageService : IStorageService
 {

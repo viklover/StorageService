@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Api.DTOs;
 using Api.Exceptions;
 
-using Application.Services.Storage;
+using Core.Storage;
 
 namespace Api.Controllers;
 

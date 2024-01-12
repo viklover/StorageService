@@ -1,4 +1,4 @@
-namespace Application.Services.Storage;
+namespace Core.Storage;
 
 public interface IStorageService
 {
