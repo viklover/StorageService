@@ -23,7 +23,7 @@ jobs:
         run: dotnet build --configuration Release /WarnAsError
       
       - name: Run .NET Code Analysis
-        uses: dotnet/code-analysis@v1
+        uses: dotnet/code-analysis@main
         id: code-analysis
         with:
           solution: MySolution.sln
