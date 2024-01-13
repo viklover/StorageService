@@ -43,55 +43,74 @@ public static class SplayTreeOperations
     }
 
     /// <summary>
-    /// Splaying operation to root node by 
+    /// Searching for a node instance in the tree by key
     /// </summary>
-    /// <param name="root"></param>
-    /// <param name="x"></param>
-    /// <returns></returns>
-    public static Node? Splay(Node? root, Node x)
+    /// <param name="root">Root of tree</param>
+    /// <param name="key">Node key</param>
+    /// <returns>Found node or closest parent or null</returns>
+    public static Node? TreeSearch(Node? root, uint key)
     {
-        if (root == null || root.Key == x.Key)
-            return root;
-
-        if (root.Key > x.Key)
+        if (root == null)
+            return null;
+        
+        var ptr = root;
+        
+        do
         {
-            if (root.Left == null)
-                return root;
-
-            if (root.Left.Key > x.Key)
+            if (key < ptr.Key)
             {
-                root.Left.Left = Splay(root.Left.Left, x);
-                root = Zig(root);
+                if (ptr.Left == null)
+                    return ptr;
+                
+                ptr = ptr.Left;
             }
-            else if (root.Left.Key < x.Key)
+            else if (key > ptr.Key)
             {
-                root.Left.Right = Splay(root.Left.Right, x);
-                if (root.Left.Right != null)
-                    root.Left = Zag(root.Left); // result: root.Left can be null now
+                if (ptr.Right == null)
+                    return ptr;
+                
+                ptr = ptr.Right;
             }
-
-            return (root.Left == null) ? root : Zig(root);
-        }
-        else
-        {
-            if (root.Right == null)
-                return root;
-
-            if (root.Right.Key > x.Key)
+            else
             {
-                root.Right.Left = Splay(root.Right.Left, x);
-
-                if (root.Right.Left != null)
-                    root.Right = Zig(root.Right);
+                return ptr;
             }
-            else if (root.Right.Key < x.Key)
-            {
-                root.Right.Right = Splay(root.Right.Right, x);
-                root = Zag(root); // result: root.Left can be null now
-            }
+            
+        } while (ptr != null);
 
-            return (root.Right == null) ? root : Zag(root);
-        }
+        return null;
     }
-    //TODO: using iteration method instead of recursion
+
+    /// <summary>
+    /// Splaying operation to search node
+    /// </summary>
+    /// <param name="x">Search node</param>
+    /// <exception cref="Exception">Throws when tree consistency is broken or author is dumb</exception>
+    /// <returns>New root of tree - search node</returns>
+    public static Node? Splay(Node x)
+    {
+        if (x.Parent == null)
+            return x;
+
+        var i = x;
+        
+        do
+        {
+            if (i.Parent.Left != null && i.Parent.Left.Key == x.Key)
+            {
+                i = Zig(i.Parent);
+            }
+            else if (i.Parent.Right != null && i.Parent.Right.Key == x.Key)
+            {
+                i = Zag(i.Parent);
+            }
+            else
+            {
+                throw new Exception("Error in Splay Operation: consistency is probably broken");
+            }
+            
+        } while (i.Parent != null);
+
+        return i;
+    }
 }
