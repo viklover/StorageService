@@ -23,9 +23,4 @@ jobs:
         run: dotnet build --configuration Release /WarnAsError
       
       - name: Run .NET Code Analysis
-        uses: dotnet/code-analysis@main
-        id: code-analysis
-        with:
-          solution: MySolution.sln
-          build-breaking: true
-          all-categories: 8.0
+        run: source .env && dotnet roslynator analyze --ignored-diagnostics $IGNORE_DIAGNOSTICS
