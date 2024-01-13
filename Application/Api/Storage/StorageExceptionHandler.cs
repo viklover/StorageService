@@ -12,7 +12,7 @@ public class StorageExceptionHandler
     {
         var ex = context.Features.Get<IExceptionHandlerFeature>()?.Error;
         if (ex == null) return;
-        
+
         var statusCode = ex.GetType() == typeof(NotFoundException)
             ? HttpStatusCode.NotFound
             : HttpStatusCode.InternalServerError;
