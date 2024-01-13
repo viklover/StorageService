@@ -3,7 +3,7 @@ namespace Application.Services.Storage;
 public class FakeStorageService : IStorageService
 {
     private readonly Dictionary<string, string> _data = new();
-    
+
     public void SaveOrUpdatePair(string key, string value)
     {
         _data.Add(key, value);

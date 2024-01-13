@@ -15,7 +15,7 @@ public class StorageController(IStorageService storageService) : ControllerBase
     {
         storageService.SaveOrUpdatePair(key, valueDto.Value);
     }
-    
+
     [HttpGet]
     public string GetValueByKey(string key)
     {
@@ -28,7 +28,7 @@ public class StorageController(IStorageService storageService) : ControllerBase
 
         return value;
     }
-    
+
     [HttpDelete]
     public void DeletePairByKey(string key)
     {
