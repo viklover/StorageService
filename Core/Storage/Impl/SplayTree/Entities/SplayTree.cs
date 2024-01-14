@@ -3,8 +3,6 @@ namespace Core.Storage.Impl.SplayTree.Entities;
 public class SplayTree
 {
     private Node? _root;
-    
-    public static Node CreateNode(uint key, string value) => new Node(key, value);
 
     /// <summary>
     /// Inserting a new node in the tree
@@ -19,23 +17,39 @@ public class SplayTree
         if (_root == null)
             return _root = newNode;
         
-        var node = TreeSearch(newNode.Key)!;
+        // found node or closest (by key) node
+        var node = SplayTreeOperations.TreeSearch(_root, newNode.Key)!;
         
-        // new node with this key already exists
+        // splay this node
+        Splay(node);
+        
+        // update node if node with this key already exists
         if (node.Key == newNode.Key)
         {
             node.Value = newNode.Value;
             wasUpdated = true;
-            return Splay(node);
-        } 
-        
-        // found node is parent for new node
-        if (newNode.Key < node.Key)
-            node.Left = newNode;
-        else
-            node.Right = newNode;
+            return node;
+        }
 
-        return Splay(newNode);
+        // insert node with changing root of tree
+        if (node.Key < newNode.Key)
+        {
+            newNode.Left = node;
+            newNode.Right = node.Right;
+            node.Right = null;
+            node.Parent = newNode;
+        }
+        else
+        {
+            newNode.Right = node;
+            newNode.Left = node.Left;
+            node.Left = null;
+            node.Parent = newNode;
+        }
+
+        newNode.Parent = null;
+
+        return _root = newNode;
     }
 
     /// <summary>
@@ -45,13 +59,11 @@ public class SplayTree
     /// <returns>Found node or null</returns>
     public Node? Search(uint key)
     {
-        var node = TreeSearch(key);
+        var node = SplayTreeOperations.TreeSearch(_root, key);
 
         if (node == null)
             return null;
 
-        // поднимаем найденную ноду
-        // (или ближайшую ноду, которая могла бы быть родителем для поискового ключа)
         Splay(node);
 
         return node.Key != key ? null : node;
@@ -64,68 +76,46 @@ public class SplayTree
     /// <returns>"true" if node has been deleted otherwise - "false"</returns>
     public bool Delete(uint key)
     {
-        var node = TreeSearch(key);
+        var node = Search(key);
 
         if (node == null)
             return false;
-
-        Splay(node);
         
-        // TODO: 1) delete node, 2) concat other branches
-        
-        return node.Key == key;
-    }
-
-    /// <summary>
-    /// Searching for a node in the tree by key
-    /// </summary>
-    /// <param name="key">Node key</param>
-    /// <returns>Found node or closest parent or null</returns>
-    private Node? TreeSearch(uint key)
-    {
-        if (_root == null)
-            return null;
-        
-        var ptr = _root;
-        
-        do
+        // deleting node and concat other branches
+        if (node.Left == null && node.Right == null)
         {
-            if (key < ptr.Key)
-            {
-                if (ptr.Left == null)
-                    return ptr;
-                
-                ptr = ptr.Left;
-            }
-            else if (key > ptr.Key)
-            {
-                if (ptr.Right == null)
-                    return ptr;
-                
-                ptr = ptr.Right;
-            }
-            else
-            {
-                return ptr;
-            }
-            
-        } while (ptr != null);
+            _root = null;
+        }
+        else if (node.Left != null && node.Right == null)
+        {
+            _root = node.Left;
+            _root.Parent = null;
+        }
+        else if (node.Right != null && node.Left == null)
+        {
+            _root = node.Right;
+            _root.Parent = null;
+        }
+        else if (node.Right != null && node.Left != null)
+        {
+            var minimumNode = SplayTreeOperations.TreeSearchMinimum(node.Right)!;
+            _root = SplayTreeOperations.Splay(minimumNode)!;
+            _root.Parent = null;
 
-        return null;
+            _root.Left = node.Left;
+            _root.Left.Parent = _root;
+        }
+
+        return true;
     }
     
-    private Node Splay(Node node)
+    /// <summary>
+    /// Splaying operation with root of splay tree
+    /// </summary>
+    /// <param name="node">Search node</param>
+    /// <returns>New root of tree</returns>
+    private Node? Splay(Node node)
     {
-        throw new NotImplementedException();
-    }
-
-    private void Zig(Node node)
-    {
-        
-    }
-    
-    private void Zag(Node node)
-    {
-        
+        return _root = SplayTreeOperations.Splay(node);
     }
 }

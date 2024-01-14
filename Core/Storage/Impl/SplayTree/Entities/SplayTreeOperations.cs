@@ -25,6 +25,8 @@ public static class SplayTreeOperations
         var y = x.Left;
         x.Left = y!.Right;
         y.Right = x;
+        y.Parent = x.Parent;
+        x.Parent = y;
         return y;
     }
     
@@ -39,13 +41,15 @@ public static class SplayTreeOperations
         var y = x.Right;
         x.Right = y!.Left;
         y.Left = x;
+        y.Parent = x.Parent;
+        x.Parent = y;
         return y;
     }
 
     /// <summary>
     /// Searching for a node instance in the tree by key
     /// </summary>
-    /// <param name="root">Root of tree</param>
+    /// <param name="root">Root node of tree</param>
     /// <param name="key">Node key</param>
     /// <returns>Found node or closest parent or null</returns>
     public static Node? TreeSearch(Node? root, uint key)
@@ -110,6 +114,20 @@ public static class SplayTreeOperations
             }
             
         } while (i.Parent != null);
+
+        return i;
+    }
+
+    /// <summary>
+    /// Searching a minimum node in the tree
+    /// </summary>
+    /// <param name="root">Root node of tree</param>
+    /// <returns>Minimum node</returns>
+    public static Node TreeSearchMinimum(Node root)
+    {
+        var i = root;
+
+        while (i.Left != null) i = i.Left;
 
         return i;
     }
