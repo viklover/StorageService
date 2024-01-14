@@ -8,7 +8,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // temporarily no data structure yet
-builder.Services.ConfigureApplicationServices();
+builder.Services.ConfigureServices();
 
 var app = builder.Build();
 

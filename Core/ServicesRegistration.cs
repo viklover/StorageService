@@ -7,7 +7,7 @@ namespace Core;
 
 public static class ServicesRegistration
 {
-    public static IServiceCollection ConfigureApplicationServices(this IServiceCollection services)
+    public static IServiceCollection ConfigureServices(this IServiceCollection services)
     {
         services.AddSingleton<IStorageService, SplayTreeStorageImpl>();
         return services;
