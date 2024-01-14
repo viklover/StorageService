@@ -1,3 +1,5 @@
+using Core.Storage.Impl.SplayTree.Infrastructure;
+
 namespace Core.Storage.Impl.SplayTree;
 
 using Entities;
@@ -6,7 +8,14 @@ using Extensions;
 public class SplayTreeStorageImpl : IStorageService
 {
     private readonly SplayTree _tree = new SplayTree();
-    
+    private readonly IStorageRepository _repository;
+
+    public SplayTreeStorageImpl(IStorageRepository repository)
+    {
+        _repository = repository;
+        _repository.PrepareSchemas();
+    }
+
     public void SaveOrUpdatePair(string key, string value)
     {
         _tree.Insert(SplayTreeOperations.CreateNode(key.Hash(), value), out var wasUpdated);
