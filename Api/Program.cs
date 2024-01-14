@@ -1,5 +1,6 @@
 using Api.Exceptions;
 using Core;
+using Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,8 +8,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// temporarily no data structure yet
 builder.Services.ConfigureServices();
+builder.Services.ConfigureRepositories();
 
 var app = builder.Build();
 
