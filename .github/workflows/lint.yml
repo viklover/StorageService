@@ -23,4 +23,4 @@ jobs:
         run: dotnet build --configuration Release
       
       - name: Run .NET Code Analysis
-        run: source .env && dotnet tool restore && dotnet roslynator analyze --ignored-diagnostics $IGNORE_DIAGNOSTICS
+        run: source .env && dotnet tool restore && lint
