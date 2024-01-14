@@ -1,4 +1,4 @@
-namespace Application.Services.Storage;
+namespace Core.Storage.Impl.Fake;
 
 public class FakeStorageService : IStorageService
 {
@@ -15,8 +15,8 @@ public class FakeStorageService : IStorageService
         return value;
     }
 
-    public void DeletePairByKey(string key)
+    public bool DeletePairByKey(string key)
     {
-        _data.Remove(key);
+        return _data.Remove(key);
     }
 }

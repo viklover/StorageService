@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 
-using Application.Api.Storage.DTOs;
-using Application.Api.Storage.Exceptions;
-using Application.Services.Storage;
+using Api.DTOs;
+using Api.Exceptions;
 
-namespace Application.Api.Storage;
+using Core.Storage;
+
+namespace Api.Controllers;
 
 [ApiController]
 [Route("storage/{key}")]
