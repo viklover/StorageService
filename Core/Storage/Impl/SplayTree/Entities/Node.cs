@@ -1,5 +1,11 @@
 namespace Core.Storage.Impl.SplayTree.Entities;
 
+/// <summary>
+/// Node of splay tree
+/// represents a pair in storage service 
+/// </summary>
+/// <param name="key">Hash of variable name</param>
+/// <param name="value">Variable value</param>
 public class Node(uint key, string value)
 {
     public Node? Parent { get; set; }

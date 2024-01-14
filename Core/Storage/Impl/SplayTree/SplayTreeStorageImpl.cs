@@ -9,7 +9,7 @@ public class SplayTreeStorageImpl : IStorageService
     
     public void SaveOrUpdatePair(string key, string value)
     {
-        _tree.Insert(SplayTree.CreateNode(key.Hash(), value), out var wasUpdated);
+        _tree.Insert(SplayTreeOperations.CreateNode(key.Hash(), value), out var wasUpdated);
     }
 
     public string? GetValueByKey(string key)
@@ -17,8 +17,8 @@ public class SplayTreeStorageImpl : IStorageService
         return _tree.Search(key.Hash())?.Value;
     }
 
-    public void DeletePairByKey(string key)
+    public bool DeletePairByKey(string key)
     {
-        _tree.Delete(key.Hash());
+        return _tree.Delete(key.Hash());
     }
 }
