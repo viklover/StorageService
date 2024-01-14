@@ -15,7 +15,7 @@ public class StorageRepository : IStorageRepository
     {
         throw new NotImplementedException();
     }
-    
+
     ~StorageRepository()
     {
         _cluster.Dispose();
