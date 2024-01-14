@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Core;
 
-public static class ApplicationServicesRegistration
+public static class ServicesRegistration
 {
     public static IServiceCollection ConfigureApplicationServices(this IServiceCollection services)
     {
