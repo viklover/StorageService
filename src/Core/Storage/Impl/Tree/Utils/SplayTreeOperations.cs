@@ -24,10 +24,20 @@ public static class SplayTreeOperations
     /// <returns>Formed connections between nodes</returns>
     public static Node Zig(Node x)
     {
-        var y = x.Left;
-        x.Left = y!.Right;
-        y.Right = x;
+        var y = x.Left!;
+        x.Left = y.Right;
+
+        if (y.Right != null)
+            y.Right.Parent = x;
+
         y.Parent = x.Parent;
+
+        if (x == x.Parent?.Right)
+            x.Parent.Right = y;
+        else if (x == x.Parent?.Left)
+            x.Parent.Left = y;
+            
+        y.Right = x;
         x.Parent = y;
         return y;
     }
@@ -40,10 +50,20 @@ public static class SplayTreeOperations
     /// <returns>Formed connections between nodes</returns>
     public static Node Zag(Node x)
     {
-        var y = x.Right;
-        x.Right = y!.Left;
-        y.Left = x;
+        var y = x.Right!;
+        x.Right = y.Left;
+
+        if (y.Left != null)
+            y.Left.Parent = x;
+
         y.Parent = x.Parent;
+
+        if (x == x.Parent?.Left)
+            x.Parent.Left = y;
+        else if (x == x.Parent?.Right)
+            x.Parent.Right = y;
+        
+        y.Left = x;
         x.Parent = y;
         return y;
     }

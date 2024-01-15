@@ -4,7 +4,7 @@ namespace Core.Storage.Impl.Tree.Entities;
 
 public class SplayTree
 {
-    private Node? _root;
+    public Node? root { get; private set; }
 
     /// <summary>
     /// Inserting a new node in the tree
@@ -16,11 +16,11 @@ public class SplayTree
     {
         wasUpdated = false;
 
-        if (_root == null)
-            return _root = newNode;
+        if (root == null)
+            return root = newNode;
         
         // found node or closest (by key) node
-        var node = SplayTreeOperations.TreeSearch(_root, newNode.Key)!;
+        var node = SplayTreeOperations.TreeSearch(root, newNode.Key)!;
         
         // splay this node
         Splay(node);
@@ -37,23 +37,40 @@ public class SplayTree
         if (node.Key < newNode.Key)
         {
             newNode.Left = node;
+            newNode.Left.Parent = newNode;
             newNode.Right = node.Right;
+            
+            if (newNode.Right != null) 
+                newNode.Right.Parent = newNode;
+            
             node.Right = null;
             node.Parent = newNode;
         }
         else
         {
             newNode.Right = node;
+            newNode.Right.Parent = newNode;
             newNode.Left = node.Left;
+
+            if (newNode.Right != null)
+                newNode.Right.Parent = newNode;
+            
             node.Left = null;
             node.Parent = newNode;
         }
 
         newNode.Parent = null;
 
-        return _root = newNode;
+        return root = newNode;
     }
 
+    /// <summary>
+    /// Inserting a new node in the tree
+    /// </summary>
+    /// <param name="newNode">Node that has to be inserted</param>
+    /// <returns>Inserted or updated node instance</returns>
+    public Node Insert(Node newNode) => Insert(newNode, out var value);
+    
     /// <summary>
     /// Searching a node by key
     /// </summary>
@@ -61,7 +78,7 @@ public class SplayTree
     /// <returns>Found node or null</returns>
     public Node? Search(uint key)
     {
-        var node = SplayTreeOperations.TreeSearch(_root, key);
+        var node = SplayTreeOperations.TreeSearch(root, key);
 
         if (node == null)
             return null;
@@ -86,26 +103,26 @@ public class SplayTree
         // deleting node and concat other branches
         if (node.Left == null && node.Right == null)
         {
-            _root = null;
+            root = null;
         }
         else if (node.Left != null && node.Right == null)
         {
-            _root = node.Left;
-            _root.Parent = null;
+            root = node.Left;
+            root.Parent = null;
         }
         else if (node.Right != null && node.Left == null)
         {
-            _root = node.Right;
-            _root.Parent = null;
+            root = node.Right;
+            root.Parent = null;
         }
         else if (node.Right != null && node.Left != null)
         {
             var minimumNode = SplayTreeOperations.TreeSearchMinimum(node.Right)!;
-            _root = SplayTreeOperations.Splay(minimumNode)!;
-            _root.Parent = null;
+            root = SplayTreeOperations.Splay(minimumNode)!;
+            root.Parent = null;
 
-            _root.Left = node.Left;
-            _root.Left.Parent = _root;
+            root.Left = node.Left;
+            root.Left.Parent = root;
         }
 
         return true;
@@ -118,6 +135,6 @@ public class SplayTree
     /// <returns>New root of tree</returns>
     private Node? Splay(Node node)
     {
-        return _root = SplayTreeOperations.Splay(node);
+        return root = SplayTreeOperations.Splay(node);
     }
 }
