@@ -1,4 +1,4 @@
-using Core.Storage.Impl.SplayTree.Infrastructure;
+using Core.Storage.Impl.Tree.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Repository;

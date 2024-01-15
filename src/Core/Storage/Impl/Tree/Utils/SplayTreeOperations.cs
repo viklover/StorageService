@@ -1,4 +1,6 @@
-namespace Core.Storage.Impl.SplayTree.Entities;
+using Core.Storage.Impl.Tree.Entities;
+
+namespace Core.Storage.Impl.Tree.Utils;
 
 /// <summary>
 /// Splay Tree Operations utility class.

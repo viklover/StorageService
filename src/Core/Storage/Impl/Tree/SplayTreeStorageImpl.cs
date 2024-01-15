@@ -1,7 +1,8 @@
-using Core.Storage.Impl.SplayTree.Infrastructure;
+using Core.Storage.Impl.Tree.Infrastructure;
 
-namespace Core.Storage.Impl.SplayTree;
+namespace Core.Storage.Impl.Tree;
 
+using Utils;
 using Entities;
 using Extensions;
 

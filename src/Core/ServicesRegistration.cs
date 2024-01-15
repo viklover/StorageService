@@ -1,5 +1,5 @@
 using Core.Storage;
-using Core.Storage.Impl.SplayTree;
+using Core.Storage.Impl.Tree;
 
 using Microsoft.Extensions.DependencyInjection;
 

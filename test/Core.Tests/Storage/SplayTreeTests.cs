@@ -1,4 +1,4 @@
-using Core.Storage.Impl.SplayTree.Entities;
+using Core.Storage.Impl.Tree.Entities;
 
 namespace Core.Storage;
 

@@ -1,4 +1,4 @@
-namespace Core.Storage.Impl.SplayTree.Entities;
+namespace Core.Storage.Impl.Tree.Entities;
 
 /// <summary>
 /// Node of splay tree
