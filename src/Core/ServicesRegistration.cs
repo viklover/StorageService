@@ -9,7 +9,7 @@ public static class ServicesRegistration
 {
     public static IServiceCollection ConfigureServices(this IServiceCollection services)
     {
-        services.AddSingleton<IStorageService, SplayTreeStorageImpl>();
+        services.AddSingleton<IStorageService, SplayTreeStorageService>();
         return services;
     }
 }

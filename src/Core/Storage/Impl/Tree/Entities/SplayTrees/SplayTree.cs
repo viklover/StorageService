@@ -6,7 +6,7 @@ namespace Core.Storage.Impl.Tree.Entities.SplayTrees;
 /// <summary>
 /// Splay tree (bottom-up implementation) - binary search tree
 /// </summary>
-public class SplayTree : ISplayTree
+public class SplayTree : IBinaryTree
 {
     public INode? Root { get; private set; }
 

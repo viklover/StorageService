@@ -1,9 +1,10 @@
 using Cassandra;
 using Core.Infrastructure;
+using Core.Storage.Interfaces.Updates;
 
 namespace Repository.Storage;
 
-public class StorageRepository : IStorageRepository
+public class StorageRepository : IStorageRepository<uint>
 {
     private readonly Cluster _cluster = Cluster.Builder()
         .AddContactPoint(Environment.GetEnvironmentVariable("CASSANDRA_HOST"))
@@ -18,6 +19,12 @@ public class StorageRepository : IStorageRepository
     public void PrepareSchemas()
     {
         // throw new NotImplementedException();
+    }
+
+    public bool ApplyUpdate(IStorageUpdate<uint> update)
+    {
+        // throw new NotImplementedException();
+        return false;
     }
 
     ~StorageRepository()

@@ -9,7 +9,7 @@ public static class RepositoriesRegistration
 {
     public static IServiceCollection ConfigureRepositories(this IServiceCollection services)
     {
-        services.AddSingleton<IStorageRepository, StorageRepository>();
+        services.AddSingleton<IStorageRepository<uint>, StorageRepository>();
         return services;
     }
 }

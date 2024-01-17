@@ -8,12 +8,12 @@ namespace Core.Storage.Impl.Tree;
 using Entities;
 using Extensions;
 
-public class SplayTreeStorageImpl : IStorageService
+public class SplayTreeStorageService : IStorageService
 {
-    private readonly ISplayTree _tree = new SplayTree();
+    private readonly IBinaryTree _tree = new SplayTree();
     private readonly IStorageUpdatesService<uint> _updatesService;
 
-    public SplayTreeStorageImpl(IStorageUpdatesService<uint> updatesService)
+    public SplayTreeStorageService(IStorageUpdatesService<uint> updatesService)
     {
         _tree.UpdatesChannel += updatesService.OnUpdate;
         _updatesService = updatesService;

@@ -6,7 +6,7 @@ namespace Core.Storage;
 
 public class SplayTreeInsertionTests
 {
-    private readonly ISplayTree _tree = new SplayTree();
+    private readonly IBinaryTree _tree = new SplayTree();
     
     [Fact]
     public void InsertionTests()

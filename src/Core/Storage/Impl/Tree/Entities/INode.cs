@@ -3,7 +3,7 @@ using Core.Storage.Interfaces;
 namespace Core.Storage.Impl.Tree.Entities;
 
 /// <summary>
-/// Interface of splay tree node.
+/// Interface of tree node.
 /// It's pair in storage service area.
 /// </summary>
 public interface INode : IPair<uint>

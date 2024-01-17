@@ -3,10 +3,9 @@ using Core.Storage.Interfaces.Updates.Types;
 namespace Core.Storage.Impl.Tree.Entities;
 
 /// <summary>
-/// Splay tree data structure.
-/// Can be implement like top-down or bottom-up
+/// Interface of binary tree data structure.
 /// </summary>
-public interface ISplayTree
+public interface IBinaryTree
 {
     INode? Root { get; }
     

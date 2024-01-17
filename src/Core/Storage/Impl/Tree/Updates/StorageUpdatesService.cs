@@ -5,10 +5,10 @@ namespace Core.Storage.Impl.Tree.Updates;
 
 public class StorageUpdatesService : IStorageUpdatesService<uint>
 {
-    private readonly LinkedList<StorageUpdate> _changes = [];
-    private readonly IStorageRepository _repository;
+    private readonly Queue<StorageUpdate> _changes = [];
+    private readonly IStorageRepository<uint> _repository;
 
-    public StorageUpdatesService(IStorageRepository repository)
+    public StorageUpdatesService(IStorageRepository<uint> repository)
     {
         _repository = repository;
         _repository.PrepareSchemas();
@@ -16,11 +16,11 @@ public class StorageUpdatesService : IStorageUpdatesService<uint>
 
     public void OnUpdate(IStorageUpdate<uint> update)
     {
-        _changes.AddLast((StorageUpdate) update);
+        _changes.Enqueue((StorageUpdate) update);
     }
 
     public bool Commit()
     {
-        throw new NotImplementedException();
+        return false;
     }
 }
