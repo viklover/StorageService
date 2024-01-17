@@ -1,4 +1,4 @@
-namespace Core.Storage.Impl.Tree.Infrastructure;
+namespace Core.Infrastructure;
 
 /// <summary>
 /// Interface of storage repository

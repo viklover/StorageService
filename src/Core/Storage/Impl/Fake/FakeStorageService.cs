@@ -1,3 +1,5 @@
+using Core.Storage.Interfaces;
+
 namespace Core.Storage.Impl.Fake;
 
 public class FakeStorageService : IStorageService

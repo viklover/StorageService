@@ -1,5 +1,5 @@
 using Cassandra;
-using Core.Storage.Impl.Tree.Infrastructure;
+using Core.Infrastructure;
 
 namespace Repository.Storage;
 
