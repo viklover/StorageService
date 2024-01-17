@@ -1,4 +1,4 @@
-namespace Core.Storage.Impl.Tree.Entities;
+namespace Core.Storage.Impl.Tree.Entities.Nodes;
 
 /// <summary>
 /// Node of splay tree
@@ -6,11 +6,11 @@ namespace Core.Storage.Impl.Tree.Entities;
 /// </summary>
 /// <param name="key">Hash of variable name</param>
 /// <param name="value">Variable value</param>
-public class Node(uint key, string value)
+public class Node(uint key, string value) : INode
 {
-    public Node? Parent { get; set; }
-    public Node? Left { get; set; }
-    public Node? Right { get; set; }
+    public INode? Parent { get; set; }
+    public INode? Left { get; set; }
+    public INode? Right { get; set; }
 
     public uint Key { get; } = key;
     public string Value { get; set; } = value;

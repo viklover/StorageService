@@ -2,9 +2,9 @@ using Core.Storage.Impl.Tree.Entities;
 
 namespace Core.Storage.Impl.Tree.Utils;
 
-public class SplayTreeVisualization(SplayTree tree)
+public class SplayTreeVisualization(ISplayTree tree)
 {
-    private SplayTree _tree { get; }
+    private ISplayTree _tree { get; }
 
     public void Print()
     {

@@ -1,15 +1,18 @@
+using Core.Storage.Interfaces.Updates;
+
 namespace Core.Storage.Impl.Tree.Updates;
 
-/// <summary>
-/// Buffer of storage updates.
-/// Represents a service for db synchronization
-/// </summary>
-public class StorageUpdatesService
+public class StorageUpdatesService : IStorageUpdatesService<uint>
 {
     private LinkedList<StorageUpdate> _changes = [];
     
-    public void Add()
+    public void Add(IStorageUpdate<uint> update)
     {
-        
+        throw new NotImplementedException();
+    }
+
+    public bool Commit()
+    {
+        throw new NotImplementedException();
     }
 }
