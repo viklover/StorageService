@@ -1,4 +1,4 @@
-namespace Core.Storage.Interfaces.Updates;
+namespace Core.Storage.Interfaces.Updates.Types;
 
 public enum PairUpdateType
 {

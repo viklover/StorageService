@@ -1,4 +1,5 @@
 using Core.Storage.Impl.Tree.Entities.Nodes;
+using Core.Storage.Interfaces.Updates.Types;
 
 namespace Core.Storage.Impl.Tree.Entities.SplayTrees;
 
@@ -8,7 +9,12 @@ namespace Core.Storage.Impl.Tree.Entities.SplayTrees;
 public class SplayTree : ISplayTree
 {
     public INode? Root { get; private set; }
-    
+
+    /// <summary>
+    /// Searching a node by key
+    /// </summary>
+    /// <param name="key">Node key</param>
+    /// <returns>Found node or null</returns>
     public INode? Search(uint key)
     {
         var node = TreeSearch(key);
@@ -20,7 +26,12 @@ public class SplayTree : ISplayTree
 
         return node.Key != key ? null : node;
     }
-    
+
+    /// <summary>
+    /// Inserting a new node in the tree
+    /// </summary>
+    /// <param name="newNode">Node that has to be inserted</param>
+    /// <returns>Inserted or updated node instance</returns>
     public INode Insert(INode newNode)
     {
         if (Root == null)
@@ -69,7 +80,12 @@ public class SplayTree : ISplayTree
 
         return Root = newNode;
     }
-    
+
+    /// <summary>
+    /// Delete a node by key
+    /// </summary>
+    /// <param name="key">Node key</param>
+    /// <returns>"true" if node has been deleted otherwise - "false"</returns>
     public bool Delete(uint key)
     {
         var node = Search(key);
@@ -247,4 +263,6 @@ public class SplayTree : ISplayTree
 
         return i;
     }
+    
+    public event StorageUpdateHandler<uint>? UpdatesChannel;
 }

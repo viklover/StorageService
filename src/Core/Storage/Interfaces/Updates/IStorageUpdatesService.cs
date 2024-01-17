@@ -5,13 +5,14 @@ namespace Core.Storage.Interfaces.Updates;
 /// Represents a store for storage changes storing
 /// </summary>
 public interface IStorageUpdatesService<T>
-{ 
+{
     /// <summary>
     /// Add update to changes list, that has to be saved in
     /// repository
     /// </summary>
-    /// <param name="update">Update entity</param>
-    void Add(IStorageUpdate<T> update);
+    /// <param name="sender">Notification sender</param>
+    /// <param name="update">Update event entity</param>
+    void OnUpdate(IStorageUpdate<uint> update);
     
     /// <summary>
     /// Save all updates in database

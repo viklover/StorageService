@@ -1,3 +1,5 @@
+using Core.Storage.Interfaces.Updates.Types;
+
 namespace Core.Storage.Impl.Tree.Entities;
 
 /// <summary>
@@ -28,4 +30,9 @@ public interface ISplayTree
     /// <param name="key">Node key</param>
     /// <returns>"true" if node has been deleted otherwise - "false"</returns>
     bool Delete(uint key);
+    
+    /// <summary>
+    /// Updates channel for event subscribers
+    /// </summary>
+    event StorageUpdateHandler<uint> UpdatesChannel;
 }

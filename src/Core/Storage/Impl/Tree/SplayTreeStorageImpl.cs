@@ -1,6 +1,7 @@
-using Core.Storage.Impl.Tree.Entities.SplayTrees;
 using Core.Storage.Interfaces;
-using Core.Infrastructure;
+using Core.Storage.Interfaces.Updates;
+
+using Core.Storage.Impl.Tree.Entities.SplayTrees;
 
 namespace Core.Storage.Impl.Tree;
 
@@ -10,12 +11,12 @@ using Extensions;
 public class SplayTreeStorageImpl : IStorageService
 {
     private readonly ISplayTree _tree = new SplayTree();
-    private readonly IStorageRepository _repository;
+    private readonly IStorageUpdatesService<uint> _updatesService;
 
-    public SplayTreeStorageImpl(IStorageRepository repository)
+    public SplayTreeStorageImpl(IStorageUpdatesService<uint> updatesService)
     {
-        _repository = repository;
-        _repository.PrepareSchemas();
+        _tree.UpdatesChannel += updatesService.OnUpdate;
+        _updatesService = updatesService;
     }
 
     public void SaveOrUpdatePair(string key, string value)

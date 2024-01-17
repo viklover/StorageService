@@ -1,3 +1,5 @@
+using Core.Storage.Interfaces.Updates.Types;
+
 namespace Core.Storage.Interfaces.Updates;
 
 /// <summary>
@@ -9,8 +11,8 @@ namespace Core.Storage.Interfaces.Updates;
 public interface IStorageUpdate<T>
 {
     /// <summary>
-    /// Get list of events about pair 
+    /// Get list of events about updated pairs
     /// </summary>
-    /// <returns></returns>
+    /// <returns>List of tuples: pair + update type</returns>
     List<Tuple<IPair<T>, PairUpdateType>> Pairs();
 }
