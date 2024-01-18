@@ -4,12 +4,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.Storage.Impl.Tree.Updates;
 
-public class StorageUpdatesService(ILogger<StorageUpdatesService> logger, IStorageRepository<uint> repository)
-    : IStorageUpdatesService<uint>
+public class StorageUpdatesService(ILogger<StorageUpdatesService> logger, IStorageRepository repository)
+    : IStorageUpdatesService
 {
     private readonly Queue<StorageUpdate> _changes = [];
 
-    public void OnUpdate(IStorageUpdate<uint> update)
+    public void OnUpdate(IStorageUpdate update)
     {
         _changes.Enqueue((StorageUpdate)update);
         

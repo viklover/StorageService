@@ -7,9 +7,9 @@ namespace Core.Storage.Impl.Tree.Updates;
 /// <summary>
 /// Storage update entity for splay tree implementation service 
 /// </summary>
-public class StorageUpdate : IStorageUpdate<uint>
+public class StorageUpdate : IStorageUpdate
 {
-    public List<Tuple<IPair<uint>, PairUpdateType>> Pairs()
+    public List<Tuple<IPair, PairUpdateType>> Pairs()
     {
         throw new NotImplementedException();
     }

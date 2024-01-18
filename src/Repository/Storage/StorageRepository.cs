@@ -1,6 +1,5 @@
 using Core.Storage.Interfaces;
 using Core.Storage.Interfaces.Updates;
-
 using Cassandra;
 using Microsoft.Extensions.Logging;
 
@@ -12,7 +11,7 @@ namespace Repository.Storage;
 /// <param name="logger">Repository logger</param>
 /// <param name="driver">Storage cassandra driver</param>
 public class StorageRepository(ILogger<StorageRepository> logger, StorageCassandraDriver driver)
-    : IStorageRepository<uint>
+    : IStorageRepository
 {
     private static readonly string? SchemasDirectory =
         Environment.GetEnvironmentVariable("CASSANDRA_SCHEMAS_DIRECTORY");
@@ -58,7 +57,7 @@ public class StorageRepository(ILogger<StorageRepository> logger, StorageCassand
     /// </summary>
     /// <param name="update">Update event entity</param>
     /// <returns>true if database was updated successful, otherwise - false</returns>
-    public bool ApplyUpdate(IStorageUpdate<uint> update)
+    public bool ApplyUpdate(IStorageUpdate update)
     {
         var batch = new BatchStatement();
 

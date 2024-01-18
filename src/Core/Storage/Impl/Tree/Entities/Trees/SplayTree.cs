@@ -15,7 +15,7 @@ public class SplayTree : IBinaryTree
     /// </summary>
     /// <param name="key">Node key</param>
     /// <returns>Found node or null</returns>
-    public INode? Search(uint key)
+    public INode? Search(string key)
     {
         var node = TreeSearch(key);
 
@@ -51,7 +51,7 @@ public class SplayTree : IBinaryTree
         }
 
         // insert node with changing root of tree
-        if (node.Key < newNode.Key)
+        if (node.CompareTo(newNode) < 0)
         {
             newNode.Left = node;
             newNode.Left.Parent = newNode;
@@ -86,7 +86,7 @@ public class SplayTree : IBinaryTree
     /// </summary>
     /// <param name="key">Node key</param>
     /// <returns>"true" if node has been deleted otherwise - "false"</returns>
-    public bool Delete(uint key)
+    public bool Delete(string key)
     {
         var node = Search(key);
 
@@ -127,7 +127,7 @@ public class SplayTree : IBinaryTree
     /// <param name="key">Node key</param>
     /// <param name="value">Node value</param>
     /// <returns>Node instance</returns>
-    public static INode CreateNode(uint key, string value) => new Node(key, value);
+    public static INode CreateNode(string key, string value) => new Node(key, value);
 
     /// <summary>
     /// Splaying operation to search node
@@ -220,20 +220,20 @@ public class SplayTree : IBinaryTree
     /// <param name="root">Root node of tree</param>
     /// <param name="key">Node key</param>
     /// <returns>Found node or closest parent or null</returns>
-    private INode? TreeSearch(uint key)
+    private INode? TreeSearch(string key)
     {
         var ptr = Root;
         
         while (ptr != null)
         {
-            if (key < ptr.Key)
+            if (key.CompareTo(ptr) < 0)
             {
                 if (ptr.Left == null)
                     return ptr;
                 
                 ptr = ptr.Left;
             }
-            else if (key > ptr.Key)
+            else if (key.CompareTo(ptr) > 0)
             {
                 if (ptr.Right == null)
                     return ptr;
@@ -244,7 +244,6 @@ public class SplayTree : IBinaryTree
             {
                 return ptr;
             }
-            
         }
 
         return null;
@@ -264,5 +263,5 @@ public class SplayTree : IBinaryTree
         return i;
     }
     
-    public event StorageUpdateHandler<uint>? UpdatesChannel;
+    public event StorageUpdateHandler? UpdatesChannel;
 }

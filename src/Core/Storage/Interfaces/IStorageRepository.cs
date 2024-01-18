@@ -6,7 +6,7 @@ namespace Core.Storage.Interfaces;
 /// Interface of storage repository
 /// represents proxy to communicate with database
 /// </summary>
-public interface IStorageRepository<T>
+public interface IStorageRepository
 {
     /// <summary>
     /// Create required keyspaces, tables, types, indexes
@@ -19,5 +19,5 @@ public interface IStorageRepository<T>
     /// </summary>
     /// <param name="update">Update event entity</param>
     /// <returns>true if database was updated successful, otherwise - false</returns>
-    bool ApplyUpdate(IStorageUpdate<T> update);
+    bool ApplyUpdate(IStorageUpdate update);
 }

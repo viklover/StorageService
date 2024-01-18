@@ -6,14 +6,13 @@ using Core.Storage.Impl.Tree.Entities.Trees;
 namespace Core.Storage.Impl.Tree;
 
 using Entities;
-using Extensions;
 
 public class SplayTreeStorageService : IStorageService
 {
     private readonly IBinaryTree _tree = new SplayTree();
-    private readonly IStorageUpdatesService<uint> _updatesService;
+    private readonly IStorageUpdatesService _updatesService;
 
-    public SplayTreeStorageService(IStorageUpdatesService<uint> updatesService)
+    public SplayTreeStorageService(IStorageUpdatesService updatesService)
     {
         _tree.UpdatesChannel += updatesService.OnUpdate;
         _updatesService = updatesService;
@@ -21,16 +20,16 @@ public class SplayTreeStorageService : IStorageService
 
     public void SaveOrUpdatePair(string key, string value)
     {
-        _tree.Insert(SplayTree.CreateNode(key.Hash(), value));
+        _tree.Insert(SplayTree.CreateNode(key, value));
     }
 
     public string? GetValueByKey(string key)
     {
-        return _tree.Search(key.Hash())?.Value;
+        return _tree.Search(key)?.Value;
     }
 
     public bool DeletePairByKey(string key)
     {
-        return _tree.Delete(key.Hash());
+        return _tree.Delete(key);
     }
 }

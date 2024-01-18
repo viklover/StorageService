@@ -14,7 +14,7 @@ public interface IBinaryTree
     /// </summary>
     /// <param name="key">Node key</param>
     /// <returns>Found node or null</returns>
-    INode? Search(uint key);
+    INode? Search(string key);
     
     /// <summary>
     /// Inserting a new node in the tree
@@ -28,10 +28,10 @@ public interface IBinaryTree
     /// </summary>
     /// <param name="key">Node key</param>
     /// <returns>"true" if node has been deleted otherwise - "false"</returns>
-    bool Delete(uint key);
+    bool Delete(string key);
     
     /// <summary>
     /// Updates channel for event subscribers
     /// </summary>
-    event StorageUpdateHandler<uint> UpdatesChannel;
+    event StorageUpdateHandler UpdatesChannel;
 }
