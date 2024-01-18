@@ -1,0 +1,1 @@
+CREATE TYPE IF NOT EXISTS  storage.node_position (parent  BIGINT, left_child  BIGINT, right_child BIGINT);

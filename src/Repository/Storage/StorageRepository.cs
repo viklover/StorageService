@@ -1,34 +1,54 @@
-using Cassandra;
 using Core.Infrastructure;
 using Core.Storage.Interfaces.Updates;
 
+using Cassandra;
+using System.Text;
+using Microsoft.Extensions.Logging;
+
 namespace Repository.Storage;
 
-public class StorageRepository : IStorageRepository<uint>
+public class StorageRepository(ILogger<StorageRepository> logger, StorageCassandraDriver driver)
+    : IStorageRepository<uint>
 {
-    private readonly Cluster _cluster = Cluster.Builder()
-        .AddContactPoint(Environment.GetEnvironmentVariable("CASSANDRA_HOST"))
-        .WithAuthProvider(
-            new PlainTextAuthProvider(
-                Environment.GetEnvironmentVariable("CASSANDRA_USER"),
-                Environment.GetEnvironmentVariable("CASSANDRA_PASSWORD")))
-        .Build();
-
-    public ISession Session() => _cluster.Connect("storage");
+    private static readonly string? SchemasDirectory =
+        Environment.GetEnvironmentVariable("CASSANDRA_SCHEMAS_DIRECTORY");
 
     public void PrepareSchemas()
     {
-        // throw new NotImplementedException();
+        Console.WriteLine(logger.IsEnabled(LogLevel.Debug));
+        logger.LogDebug("Preparing schema in cassandra..");
+
+        if (!Directory.Exists(SchemasDirectory))
+        {
+            logger.LogError("'CASSANDRA_SCHEMAS_DIRECTORY' env variable is not exists");
+            return;
+        }
+
+        using var session = driver.Session();
+
+        foreach (var file in Directory.GetFiles(SchemasDirectory).OrderBy(f => f))
+        {
+            var logMsg = new StringBuilder($"  --> {Path.GetFileName(file)}.. ");
+
+            try
+            {
+                session.Execute(File.ReadAllText(file));
+
+                logMsg.Append("ok");
+                logger.LogDebug(logMsg.ToString());
+            }
+            catch (QueryExecutionException exception)
+            {
+                logMsg.Append("fail");
+                logger.LogError(logMsg.ToString());
+                throw new Exception("Applying schema error");
+            }
+        }
     }
 
     public bool ApplyUpdate(IStorageUpdate<uint> update)
     {
         // throw new NotImplementedException();
         return false;
-    }
-
-    ~StorageRepository()
-    {
-        _cluster.Dispose();
     }
 }
