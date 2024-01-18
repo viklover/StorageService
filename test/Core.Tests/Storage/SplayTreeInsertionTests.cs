@@ -1,6 +1,6 @@
 using Core.Storage.Impl.Tree.Entities;
 using Core.Storage.Impl.Tree.Entities.Nodes;
-using Core.Storage.Impl.Tree.Entities.SplayTrees;
+using Core.Storage.Impl.Tree.Entities.Trees;
 
 namespace Core.Storage;
 

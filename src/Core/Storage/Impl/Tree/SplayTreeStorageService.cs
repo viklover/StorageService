@@ -1,7 +1,7 @@
 using Core.Storage.Interfaces;
 using Core.Storage.Interfaces.Updates;
 
-using Core.Storage.Impl.Tree.Entities.SplayTrees;
+using Core.Storage.Impl.Tree.Entities.Trees;
 
 namespace Core.Storage.Impl.Tree;
 
