@@ -7,12 +7,21 @@ using Microsoft.Extensions.Logging;
 
 namespace Repository.Storage;
 
+/// <summary>
+/// Repository for manipulating storage entities data
+/// </summary>
+/// <param name="logger">Repository logger</param>
+/// <param name="driver">Storage cassandra driver</param>
 public class StorageRepository(ILogger<StorageRepository> logger, StorageCassandraDriver driver)
     : IStorageRepository<uint>
 {
     private static readonly string? SchemasDirectory =
         Environment.GetEnvironmentVariable("CASSANDRA_SCHEMAS_DIRECTORY");
 
+    /// <summary>
+    /// Create required keyspaces, tables, types, indexes
+    /// if they aren't exists
+    /// </summary>
     public void PrepareSchemas()
     {
         Console.WriteLine(logger.IsEnabled(LogLevel.Debug));
@@ -46,6 +55,11 @@ public class StorageRepository(ILogger<StorageRepository> logger, StorageCassand
         }
     }
 
+    /// <summary>
+    /// Apply storage service update
+    /// </summary>
+    /// <param name="update">Update event entity</param>
+    /// <returns>true if database was updated successful, otherwise - false</returns>
     public bool ApplyUpdate(IStorageUpdate<uint> update)
     {
         // throw new NotImplementedException();

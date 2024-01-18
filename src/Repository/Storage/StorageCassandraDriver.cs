@@ -2,6 +2,10 @@ using Cassandra;
 
 namespace Repository.Storage;
 
+/// <summary>
+/// Storage cassandra driver.
+/// Represents class for giving sessions
+/// </summary>
 public class StorageCassandraDriver
 {
     private readonly Cluster _cluster = Cluster.Builder()
