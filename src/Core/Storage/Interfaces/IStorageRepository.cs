@@ -1,6 +1,6 @@
 using Core.Storage.Interfaces.Updates;
 
-namespace Core.Infrastructure;
+namespace Core.Storage.Interfaces;
 
 /// <summary>
 /// Interface of storage repository
@@ -9,7 +9,7 @@ namespace Core.Infrastructure;
 public interface IStorageRepository<T>
 {
     /// <summary>
-    /// Create required keyspaces and table
+    /// Create required keyspaces, tables, types, indexes
     /// if they aren't exists
     /// </summary>
     void PrepareSchemas();

@@ -1,8 +1,7 @@
-using Core.Infrastructure;
+using Core.Storage.Interfaces;
 using Core.Storage.Interfaces.Updates;
 
 using Cassandra;
-using System.Text;
 using Microsoft.Extensions.Logging;
 
 namespace Repository.Storage;
@@ -24,7 +23,6 @@ public class StorageRepository(ILogger<StorageRepository> logger, StorageCassand
     /// </summary>
     public void PrepareSchemas()
     {
-        Console.WriteLine(logger.IsEnabled(LogLevel.Debug));
         logger.LogDebug("Preparing schema in cassandra..");
 
         if (!Directory.Exists(SchemasDirectory))
@@ -33,23 +31,23 @@ public class StorageRepository(ILogger<StorageRepository> logger, StorageCassand
             return;
         }
 
+        const string message = "  --> {0}.. {1}";
+
         using var session = driver.Session();
 
         foreach (var file in Directory.GetFiles(SchemasDirectory).OrderBy(f => f))
         {
-            var logMsg = new StringBuilder($"  --> {Path.GetFileName(file)}.. ");
+            var fileName = Path.GetFileName(file);
 
             try
             {
                 session.Execute(File.ReadAllText(file));
 
-                logMsg.Append("ok");
-                logger.LogDebug(logMsg.ToString());
+                logger.LogDebug(message, fileName, "ok");
             }
             catch (QueryExecutionException exception)
             {
-                logMsg.Append("fail");
-                logger.LogError(logMsg.ToString());
+                logger.LogError(message, fileName, "not ok");
                 throw new Exception("Applying schema error");
             }
         }
@@ -62,6 +60,13 @@ public class StorageRepository(ILogger<StorageRepository> logger, StorageCassand
     /// <returns>true if database was updated successful, otherwise - false</returns>
     public bool ApplyUpdate(IStorageUpdate<uint> update)
     {
+        var batch = new BatchStatement();
+
+        foreach (var (pair, updateType) in update.Pairs())
+        {
+            // TODO: apply update by iteration
+        }
+
         // throw new NotImplementedException();
         return false;
     }

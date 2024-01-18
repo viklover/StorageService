@@ -1,4 +1,4 @@
-using Core.Infrastructure;
+using Core.Storage.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Repository;

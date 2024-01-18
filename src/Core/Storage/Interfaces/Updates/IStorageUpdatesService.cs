@@ -17,6 +17,5 @@ public interface IStorageUpdatesService<T>
     /// <summary>
     /// Save all updates in database
     /// </summary>
-    /// <returns>true if changes were saved successful, otherwise - false</returns>
-    bool Commit();
+    void Commit();
 }
