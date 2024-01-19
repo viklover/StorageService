@@ -5,7 +5,8 @@ namespace Tests.Configurations.Priority;
 
 public class PriorityOrderer : ITestCaseOrderer
 {
-    public IEnumerable<TTestCase> OrderTestCases<TTestCase>(IEnumerable<TTestCase> testCases) where TTestCase : ITestCase
+    public IEnumerable<TTestCase> OrderTestCases<TTestCase>(IEnumerable<TTestCase> testCases)
+        where TTestCase : ITestCase
     {
         var sortedMethods = new SortedDictionary<int, List<TTestCase>>();
 
@@ -13,7 +14,8 @@ public class PriorityOrderer : ITestCaseOrderer
         {
             int priority = 0;
 
-            foreach (var attr in testCase.TestMethod.Method.GetCustomAttributes((typeof(TestPriorityAttribute).AssemblyQualifiedName)))
+            foreach (var attr in testCase.TestMethod.Method.GetCustomAttributes((typeof(TestPriorityAttribute)
+                         .AssemblyQualifiedName)))
                 priority = attr.GetNamedArgument<int>("Priority");
 
             GetOrCreate(sortedMethods, priority).Add(testCase);
@@ -21,17 +23,17 @@ public class PriorityOrderer : ITestCaseOrderer
 
         foreach (var list in sortedMethods.Keys.Select(priority => sortedMethods[priority]))
         {
-            list.Sort((x, y) => StringComparer.OrdinalIgnoreCase.Compare(x.TestMethod.Method.Name, y.TestMethod.Method.Name));
+            list.Sort((x, y) =>
+                StringComparer.OrdinalIgnoreCase.Compare(x.TestMethod.Method.Name, y.TestMethod.Method.Name));
             foreach (var testCase in list)
                 yield return testCase;
         }
     }
 
-    static TValue GetOrCreate<TKey, TValue>(IDictionary<TKey, TValue> dictionary, TKey key) where TValue : new()
+    static TValue GetOrCreate<TKey, TValue>(SortedDictionary<TKey, TValue> dictionary, TKey key)
+        where TValue : new() where TKey : notnull
     {
-        TValue result;
-
-        if (dictionary.TryGetValue(key, out result)) return result;
+        if (dictionary.TryGetValue(key, out var result)) return result;
 
         result = new TValue();
         dictionary[key] = result;

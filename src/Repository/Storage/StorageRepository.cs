@@ -30,7 +30,7 @@ public class StorageRepository(ILogger<StorageRepository> logger, StorageCassand
             return;
         }
 
-        const string message = "  --> {0}.. {1}";
+        const string message = "  --> {SchemaName}.. {Status}";
 
         using var session = driver.Session();
 
@@ -47,7 +47,7 @@ public class StorageRepository(ILogger<StorageRepository> logger, StorageCassand
             catch (QueryExecutionException exception)
             {
                 logger.LogError(message, fileName, "not ok");
-                throw new Exception("Applying schema error");
+                throw new Exception($"Applying schema error {exception}");
             }
         }
     }

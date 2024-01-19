@@ -1,22 +1,12 @@
 using Core.Storage.Interfaces;
-using Core.Storage.Interfaces.Updates;
-
-using Core.Storage.Impl.Tree.Entities.Trees;
 
 namespace Core.Storage.Impl.Tree;
 
-using Entities;
+using Entities.Trees;
 
 public class SplayTreeStorageService : IStorageService
 {
-    private readonly IBinaryTree _tree = new SplayTree();
-    private readonly IStorageUpdatesService _updatesService;
-
-    public SplayTreeStorageService(IStorageUpdatesService updatesService)
-    {
-        _tree.UpdatesChannel += updatesService.OnUpdate;
-        _updatesService = updatesService;
-    }
+    private readonly SplayTree _tree = new SplayTree();
 
     public void SaveOrUpdatePair(string key, string value)
     {

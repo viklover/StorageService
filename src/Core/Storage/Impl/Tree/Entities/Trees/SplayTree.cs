@@ -1,6 +1,5 @@
 using Core.Extensions;
 using Core.Storage.Impl.Tree.Entities.Nodes;
-using Core.Storage.Interfaces.Updates.Types;
 
 namespace Core.Storage.Impl.Tree.Entities.Trees;
 
@@ -136,7 +135,7 @@ public class SplayTree : IBinaryTree
     /// <param name="x">Search node</param>
     /// <exception cref="Exception">Throws when tree consistency is broken or author is dumb</exception>
     /// <returns>New root of tree - search node</returns>
-    private INode? Splay(INode x)
+    private static INode? Splay(INode x)
     {
         if (x.Parent == null)
             return x;
@@ -150,7 +149,7 @@ public class SplayTree : IBinaryTree
                 i = i.Parent.CheckRelationBy(i) switch
                 {
                     RelationType.LeftChild => Zig(i.Parent),
-                    RelationType.RightChild => Zag(i.Parent)
+                    RelationType.RightChild => Zag(i.Parent),
                 };
             }
             else
@@ -194,7 +193,7 @@ public class SplayTree : IBinaryTree
     /// <param name="x">Node that will be lowered by left child node</param>
     /// <exception cref="NullReferenceException">If left child is null</exception>
     /// <returns>Formed connections between nodes</returns>
-    private INode Zig(INode x)
+    private static INode Zig(INode x)
     {
         var y = x.Left!;
         x.Left = y.Right;
@@ -220,7 +219,7 @@ public class SplayTree : IBinaryTree
     /// <param name="x">Node that will be lowered by right child node</param>
     /// <exception cref="NullReferenceException">If right child is null</exception>
     /// <returns>Formed connections between nodes</returns>
-    private INode Zag(INode x)
+    private static INode Zag(INode x)
     {
         var y = x.Right!;
         x.Right = y.Left;
@@ -280,7 +279,7 @@ public class SplayTree : IBinaryTree
     /// </summary>
     /// <param name="root">Root node of tree</param>
     /// <returns>Minimum node</returns>
-    private INode? TreeSearchMinimum(INode node)
+    private static INode? TreeSearchMinimum(INode node)
     {
         var i = node;
 
@@ -288,6 +287,4 @@ public class SplayTree : IBinaryTree
 
         return i;
     }
-
-    public event StorageUpdateHandler? UpdatesChannel;
 }
