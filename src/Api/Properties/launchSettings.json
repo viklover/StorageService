@@ -10,7 +10,8 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "CASSANDRA_HOST": "localhost",
         "CASSANDRA_USER": "cassandra",
-        "CASSANDRA_PASSWORD": "cassandra"
+        "CASSANDRA_PASSWORD": "cassandra",
+        "CASSANDRA_SCHEMAS_DIRECTORY": "../Repository/Resources/Schemas"
       }
     }
   }

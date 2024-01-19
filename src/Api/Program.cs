@@ -1,17 +1,21 @@
-using Api.Exceptions;
 using Core;
 using Repository;
+using Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddLogging(loggingBuilder => loggingBuilder.AddConsole());
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(o => o.AddSwaggerDocumentation());
 
 builder.Services.ConfigureServices();
 builder.Services.ConfigureRepositories();
 
 var app = builder.Build();
+
+app.Services.PrepareRepositories();
 
 if (app.Environment.IsDevelopment())
 {
@@ -19,10 +23,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseExceptionHandler(new ExceptionHandlerOptions
-{
-    ExceptionHandler = new StorageExceptionHandler().Invoke
-});
+app.UseCustomExceptionHandlers();
 
 app.MapControllers();
 

@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS  storage.storage_info (storage_id SMALLINT PRIMARY KEY, root_node SMALLINT);
