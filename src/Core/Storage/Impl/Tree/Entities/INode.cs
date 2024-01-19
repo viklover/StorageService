@@ -16,5 +16,5 @@ public interface INode : IPair, IComparable<INode>
     /// Get relationship type between nodes
     /// </summary>
     /// <returns>Relation type</returns>
-    RelationType RelationIs(INode? node);
+    RelationType CheckRelationBy(INode? node);
 }

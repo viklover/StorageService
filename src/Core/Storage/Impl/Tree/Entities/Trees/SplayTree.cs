@@ -23,7 +23,7 @@ public class SplayTree : IBinaryTree
         if (node == null)
             return null;
 
-        Splay(node);
+        Root = Splay(node);
 
         return node.Key != key ? null : node;
     }
@@ -37,18 +37,18 @@ public class SplayTree : IBinaryTree
     {
         if (Root == null)
             return Root = newNode;
-        
+
         // found node or closest (by key) node
         var node = TreeSearch(newNode.Key)!;
-        
+
         // splay this node
         Splay(node);
-        
+
         // update node if node with this key already exists
         if (node.Key == newNode.Key)
         {
             node.Value = newNode.Value;
-            return node;
+            return Root = node;
         }
 
         // insert node with changing root of tree
@@ -57,10 +57,10 @@ public class SplayTree : IBinaryTree
             newNode.Left = node;
             newNode.Left.Parent = newNode;
             newNode.Right = node.Right;
-            
-            if (newNode.Right != null) 
+
+            if (newNode.Right != null)
                 newNode.Right.Parent = newNode;
-            
+
             node.Right = null;
             node.Parent = newNode;
         }
@@ -72,7 +72,7 @@ public class SplayTree : IBinaryTree
 
             if (newNode.Left != null)
                 newNode.Left.Parent = newNode;
-            
+
             node.Left = null;
             node.Parent = newNode;
         }
@@ -93,7 +93,7 @@ public class SplayTree : IBinaryTree
 
         if (node == null)
             return false;
-        
+
         // deleting node and concat other branches
         if (node.Left == null && node.Right == null)
         {
@@ -121,7 +121,7 @@ public class SplayTree : IBinaryTree
 
         return true;
     }
-    
+
     /// <summary>
     /// Creating a new node instance
     /// </summary>
@@ -142,43 +142,52 @@ public class SplayTree : IBinaryTree
             return x;
 
         var i = x;
-        
+
         do
         {
-            if (i.Parent.RelationIs(i) == RelationType.LeftChild)
+            if (i.Parent.Parent == null)
             {
-                if (i.Parent.Parent != null && i.Parent.Parent.RelationIs(i.Parent) == RelationType.LeftChild)
+                i = i.Parent.CheckRelationBy(i) switch
                 {
-                    i = Zig(i.Parent.Parent);
-                    i = Zig(i);
-                }
-                else
-                {
-                    i = Zig(i.Parent);
-                }
-            }
-            else if (i.Parent.RelationIs(i) == RelationType.RightChild)
-            {
-                if (i.Parent.Parent != null && i.Parent.Parent.RelationIs(i.Parent) == RelationType.RightChild)
-                {
-                    i = Zag(i.Parent.Parent);
-                    i = Zag(i);
-                }
-                else
-                {
-                    i = Zag(i.Parent);
-                }
+                    RelationType.LeftChild => Zig(i.Parent),
+                    RelationType.RightChild => Zag(i.Parent)
+                };
             }
             else
             {
-                throw new Exception("Error in Splay Operation: consistency is probably broken");
+                // x --> parent --> grandparent
+                var parentRelation = i.Parent.CheckRelationBy(i);
+                var grandparentRelation = i.Parent.Parent.CheckRelationBy(i.Parent);
+
+                switch (parentRelation)
+                {
+                    case RelationType.LeftChild when grandparentRelation == RelationType.LeftChild:
+                        i = Zig(i.Parent.Parent);
+                        i = Zig(i);
+                        break;
+                    case RelationType.RightChild when grandparentRelation == RelationType.RightChild:
+                        i = Zag(i.Parent.Parent);
+                        i = Zag(i);
+                        break;
+                    case RelationType.RightChild when grandparentRelation == RelationType.LeftChild:
+                        i = Zag(i.Parent);
+                        i = Zig(i.Parent!);
+                        break;
+                    case RelationType.LeftChild when grandparentRelation == RelationType.RightChild:
+                        i = Zig(i.Parent);
+                        i = Zag(i.Parent!);
+                        break;
+                    case RelationType.None:
+                    default:
+                        throw new Exception("Error in Splay Operation: consistency is probably broken");
+                }
             }
             
         } while (i.Parent != null);
 
         return i;
     }
-    
+
     /// <summary>
     /// Right rotation in splay tree
     /// </summary>
@@ -199,12 +208,12 @@ public class SplayTree : IBinaryTree
             x.Parent.Right = y;
         else if (x == x.Parent?.Left)
             x.Parent.Left = y;
-            
+
         y.Right = x;
         x.Parent = y;
         return y;
     }
-    
+
     /// <summary>
     /// Left rotation in splay tree
     /// </summary>
@@ -225,7 +234,7 @@ public class SplayTree : IBinaryTree
             x.Parent.Left = y;
         else if (x == x.Parent?.Right)
             x.Parent.Right = y;
-        
+
         y.Left = x;
         x.Parent = y;
         return y;
@@ -240,21 +249,21 @@ public class SplayTree : IBinaryTree
     private INode? TreeSearch(string key)
     {
         var ptr = Root;
-        
+
         while (ptr != null)
         {
             if (key.CompareKeys(ptr) < 0)
             {
                 if (ptr.Left == null)
                     return ptr;
-                
+
                 ptr = ptr.Left;
             }
             else if (key.CompareKeys(ptr) > 0)
             {
                 if (ptr.Right == null)
                     return ptr;
-                
+
                 ptr = ptr.Right;
             }
             else
@@ -279,6 +288,6 @@ public class SplayTree : IBinaryTree
 
         return i;
     }
-    
+
     public event StorageUpdateHandler? UpdatesChannel;
 }
