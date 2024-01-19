@@ -6,5 +6,5 @@ namespace Core.Storage.Interfaces;
 public interface IPair
 {
     string Key { get; }
-    string Value { get; }
+    string Value { get; set; }
 }

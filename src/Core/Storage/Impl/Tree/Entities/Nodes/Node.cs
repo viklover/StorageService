@@ -14,9 +14,28 @@ public class Node(string key, string value) : INode
 
     public string Key { get; } = key;
     public string Value { get; set; } = value;
-    
+
     public int CompareTo(INode? other)
     {
-        return other == null ? 1 : string.Compare(Key, Value, StringComparison.Ordinal);
+        return other == null ? 1 : Node.CompareKeys(Key, other.Key);
+    }
+
+    public RelationType RelationIs(INode? node)
+    {
+        if (node == null)
+            return RelationType.None;
+
+        if (Left != null && Left.Key == node.Key)
+            return RelationType.LeftChild;
+
+        if (Right != null && Right.Key == node.Key)
+            return RelationType.RightChild;
+
+        return RelationType.None;
+    }
+
+    public static int CompareKeys(string key1, string key2)
+    {
+        return string.Compare(key1, key2, StringComparison.Ordinal);
     }
 }

@@ -1,3 +1,4 @@
+using Core.Extensions;
 using Core.Storage.Impl.Tree.Entities.Nodes;
 using Core.Storage.Interfaces.Updates.Types;
 
@@ -144,13 +145,29 @@ public class SplayTree : IBinaryTree
         
         do
         {
-            if (i.Parent.Left != null && i.Parent.Left.Key == x.Key)
+            if (i.Parent.RelationIs(i) == RelationType.LeftChild)
             {
-                i = Zig(i.Parent);
+                if (i.Parent.Parent != null && i.Parent.Parent.RelationIs(i.Parent) == RelationType.LeftChild)
+                {
+                    i = Zig(i.Parent.Parent);
+                    i = Zig(i);
+                }
+                else
+                {
+                    i = Zig(i.Parent);
+                }
             }
-            else if (i.Parent.Right != null && i.Parent.Right.Key == x.Key)
+            else if (i.Parent.RelationIs(i) == RelationType.RightChild)
             {
-                i = Zag(i.Parent);
+                if (i.Parent.Parent != null && i.Parent.Parent.RelationIs(i.Parent) == RelationType.RightChild)
+                {
+                    i = Zag(i.Parent.Parent);
+                    i = Zag(i);
+                }
+                else
+                {
+                    i = Zag(i.Parent);
+                }
             }
             else
             {
@@ -226,14 +243,14 @@ public class SplayTree : IBinaryTree
         
         while (ptr != null)
         {
-            if (key.CompareTo(ptr) < 0)
+            if (key.CompareKeys(ptr) < 0)
             {
                 if (ptr.Left == null)
                     return ptr;
                 
                 ptr = ptr.Left;
             }
-            else if (key.CompareTo(ptr) > 0)
+            else if (key.CompareKeys(ptr) > 0)
             {
                 if (ptr.Right == null)
                     return ptr;

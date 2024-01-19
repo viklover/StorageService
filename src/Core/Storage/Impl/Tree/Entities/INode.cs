@@ -12,6 +12,9 @@ public interface INode : IPair, IComparable<INode>
     INode? Left { get; set; }
     INode? Right { get; set; }
 
-    string Key { get; }
-    string Value { get; set; }
+    /// <summary>
+    /// Get relationship type between nodes
+    /// </summary>
+    /// <returns>Relation type</returns>
+    RelationType RelationIs(INode? node);
 }
