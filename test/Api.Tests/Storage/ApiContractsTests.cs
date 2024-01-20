@@ -1,17 +1,16 @@
 ﻿using Api.Controllers;
 using Api.Exceptions;
-
-using Core.Storage.Impl.Fake;
+using Api.Storage.Mock;
 
 namespace Api.Storage;
 
 public class ApiContractsTests
 {
-    private StorageController _controller = new(new FakeStorageService());
+    private readonly StorageController _controller = new(new FakeStorageService());
     
     [Fact]
     public void NotFoundException()
     {
-        Assert.Throws<NotFoundException>(() => _controller.GetValueByKey("Hello"));
+        Assert.ThrowsAsync<NotFoundException>(async() => await _controller.GetValueByKey("Hello"));
     }
 }

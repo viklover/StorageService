@@ -1,3 +1,6 @@
+using Core.Storage.Interfaces.Tasks;
+using System.Collections.Concurrent;
+
 namespace Core.Storage.Interfaces;
 
 /// <summary>
@@ -7,23 +10,27 @@ namespace Core.Storage.Interfaces;
 public interface IStorageService
 {
     /// <summary>
+    /// Queue tasks to storage service
+    /// </summary>
+    ConcurrentQueue<IStorageTask> Tasks { get; }
+    
+    /// <summary>
     /// Save or update pair in storage
     /// </summary>
     /// <param name="key">Variable name</param>
     /// <param name="value">Variable value</param>
-    void SaveOrUpdatePair(string key, string value);
+    Task SavePairAsync(string key, string value);
     
     /// <summary>
     /// Get value from storage by key
     /// </summary>
     /// <param name="key">Variable key</param>
     /// <returns>Variable value if pair was found otherwise - null</returns>
-    string? GetValueByKey(string key);
+    Task<string?> GetValueByKey(string key);
     
     /// <summary>
     /// Delete in storage pair by key
     /// </summary>
     /// <param name="key">Variable key</param>
-    /// <returns>true if pair was found and removed successfully, otherwise - false</returns>
-    bool DeletePairByKey(string key);
+    Task DeletePairByKeyAsync(string key);
 }

@@ -22,9 +22,9 @@ public class StorageController(IStorageService storageService) : ControllerBase
     /// <param name="valueDto">Variable value</param>
     /// <response code="200">Success</response>
     [HttpPut]
-    public void PutValueByKey(string key, [FromBody] ValueDto valueDto)
+    public async Task PutValueByKey(string key, [FromBody] ValueDto valueDto)
     {
-        storageService.SaveOrUpdatePair(key, valueDto.Value);
+        await storageService.SavePairAsync(key, valueDto.Value);
     }
 
     /// <summary>
@@ -35,9 +35,9 @@ public class StorageController(IStorageService storageService) : ControllerBase
     /// <response code="200">Success</response>
     /// <response code="404">Variable is not exists</response>
     [HttpGet]
-    public string GetValueByKey(string key)
+    public async Task<string> GetValueByKey(string key)
     {
-        var value = storageService.GetValueByKey(key);
+        var value = await storageService.GetValueByKey(key);
 
         if (value == null)
         {
@@ -53,8 +53,8 @@ public class StorageController(IStorageService storageService) : ControllerBase
     /// <param name="key">Variable name</param>
     /// <response code="200">Success</response>
     [HttpDelete]
-    public void DeletePairByKey(string key)
+    public async Task DeletePairByKey(string key)
     {
-        storageService.DeletePairByKey(key);
+        await storageService.DeletePairByKeyAsync(key);
     }
 }

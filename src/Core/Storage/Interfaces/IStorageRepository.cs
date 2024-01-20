@@ -1,4 +1,4 @@
-using Core.Storage.Interfaces.Updates;
+using Core.Storage.Interfaces.Operations;
 
 namespace Core.Storage.Interfaces;
 
@@ -15,9 +15,14 @@ public interface IStorageRepository
     void PrepareSchemas();
 
     /// <summary>
-    /// Apply storage service update
+    /// Get generator for events reading
     /// </summary>
-    /// <param name="update">Update event entity</param>
-    /// <returns>true if database was updated successful, otherwise - false</returns>
-    bool ApplyUpdate(IStorageUpdate update);
+    /// <returns>generator</returns>
+    IEnumerator<string> GetEventsEnumerator();
+
+    /// <summary>
+    /// Save operation in events store
+    /// </summary>
+    /// <returns>Success of processed operation</returns>
+    bool CommitOperation(OperationType operationType, string key, string? payload);
 }

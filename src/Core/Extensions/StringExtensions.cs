@@ -1,5 +1,5 @@
-using Core.Storage.Impl.Tree.Entities;
-using Core.Storage.Impl.Tree.Entities.Nodes;
+using Core.Storage.Impl.Tree;
+using Core.Storage.Impl.Tree.Nodes;
 
 namespace Core.Extensions;
 

@@ -1,4 +1,4 @@
-namespace Core.Storage.Impl.Tree.Entities;
+namespace Core.Storage.Impl.Tree;
 
 public enum RelationType
 {
