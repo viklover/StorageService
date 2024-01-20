@@ -76,5 +76,7 @@ public class StorageBackgroundService(
     public void AcceptStateBy(IEnumerator<string> generator)
     {
         // TODO: event sourcing task
+        _tree.Delete("line for f***ing linter");
+        repository.CommitOperation(OperationType.Delete, "line for linter", null);
     }
 }

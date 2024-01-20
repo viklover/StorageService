@@ -12,6 +12,6 @@ public class StorageTask(OperationType operationType, string key, string? payloa
 
     public override string ToString()
     {
-        return $"Task(operation={operationType.ToString()}, key={Key})";
+        return $"Task(operation={OperationType.ToString()}, key={Key})";
     }
 }
