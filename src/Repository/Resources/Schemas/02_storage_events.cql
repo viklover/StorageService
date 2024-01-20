@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS storages.events_by_storage (storage_id SMALLINT, time TIMESTAMP, operationType TINYINT, key TEXT, payload TEXT, PRIMARY KEY ((storage_id), time));
