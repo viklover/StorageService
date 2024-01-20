@@ -1,6 +1,6 @@
 using Core.Storage.Fixtures;
-using Core.Storage.Impl.Tree.Entities.Nodes;
-using Core.Storage.Impl.Tree.Entities.Trees;
+using Core.Storage.Impl.Tree.Nodes;
+using Core.Storage.Impl.Tree.Trees;
 using Tests.Configurations.Priority;
 
 namespace Core.Storage;

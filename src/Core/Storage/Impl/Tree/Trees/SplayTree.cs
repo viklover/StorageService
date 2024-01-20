@@ -1,7 +1,7 @@
 using Core.Extensions;
-using Core.Storage.Impl.Tree.Entities.Nodes;
+using Core.Storage.Impl.Tree.Nodes;
 
-namespace Core.Storage.Impl.Tree.Entities.Trees;
+namespace Core.Storage.Impl.Tree.Trees;
 
 /// <summary>
 /// Splay tree (bottom-up implementation) - binary search tree

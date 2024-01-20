@@ -1,6 +1,6 @@
 using Core.Storage.Interfaces;
-using Core.Storage.Interfaces.Updates;
 using Cassandra;
+using Core.Storage.Interfaces.Operations;
 using Microsoft.Extensions.Logging;
 
 namespace Repository.Storage;
@@ -52,21 +52,13 @@ public class StorageRepository(ILogger<StorageRepository> logger, StorageCassand
         }
     }
 
-    /// <summary>
-    /// Apply storage service update
-    /// </summary>
-    /// <param name="update">Update event entity</param>
-    /// <returns>true if database was updated successful, otherwise - false</returns>
-    public bool ApplyUpdate(IStorageUpdate update)
+    public IEnumerator<string> GetEventsEnumerator()
     {
-        var batch = new BatchStatement();
+        throw new NotImplementedException();
+    }
 
-        foreach (var (pair, updateType) in update.Pairs())
-        {
-            // TODO: apply update by iteration
-        }
-
-        // throw new NotImplementedException();
-        return false;
+    public bool CommitOperation(OperationType operationType, string key, string? payload)
+    {
+        throw new NotImplementedException();
     }
 }
