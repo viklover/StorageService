@@ -16,7 +16,7 @@ public class StorageCassandraDriver
                 Environment.GetEnvironmentVariable("CASSANDRA_PASSWORD")))
         .Build();
 
-    public ISession Session() => _cluster.Connect("storage");
+    public ISession Session() => _cluster.Connect();
 
     ~StorageCassandraDriver()
     {
