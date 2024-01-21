@@ -12,7 +12,7 @@ public interface IStorageRepository
     /// Save operation in events store
     /// </summary>
     /// <returns>Success of processed operation</returns>
-    Task<bool> CommitOperation(Operation operation);
+    Task<bool> CommitOperation(IOperation operation);
     
     /// <summary>
     /// Get generator for committed operations reading

@@ -21,7 +21,7 @@ public class StorageRepository(ILogger<IStorageRepository> logger, StorageCassan
     /// Save operation in events store
     /// </summary>
     /// <returns>Success of processed operation</returns>
-    public async Task<bool> CommitOperation(Operation operation)
+    public async Task<bool> CommitOperation(IOperation operation)
     {
         logger.LogDebug("Commiting operation: {operation}", operation);
 
@@ -58,7 +58,7 @@ public class StorageRepository(ILogger<IStorageRepository> logger, StorageCassan
         using var session = driver.Session();
         var mapper = new Mapper(session);
 
-        var generator = mapper.Fetch<Event>("SELECT * FROM storages.events_by_storage WHERE storage_id = ?");
+        var generator = mapper.Fetch<Event>("WHERE storage_id = ?", StorageId);
 
         foreach (var eventModel in generator)
         {
