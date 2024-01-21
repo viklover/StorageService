@@ -1,4 +1,7 @@
 # Storage service
+![CI workflow](https://github.com/viklover/StorageService/actions/workflows/lint.yml/badge.svg)
+![Tests workflow](https://github.com/viklover/StorageService/actions/workflows/tests.yml/badge.svg)
+
 In-memory key-value storage via binary splay tree implementation (and apache cassandra for service state storing)
 
 ## Docker
