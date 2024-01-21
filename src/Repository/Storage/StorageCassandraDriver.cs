@@ -36,7 +36,7 @@ public class StorageCassandraDriver(ILogger<StorageCassandraDriver> logger)
 
         if (!Directory.Exists(SchemasDirectory))
         {
-            logger.LogError("'CASSANDRA_SCHEMAS_DIRECTORY' env variable is not exists");
+            logger.LogError("'CASSANDRA_SCHEMAS_DIRECTORY' env variable is not valid");
             return;
         }
 
