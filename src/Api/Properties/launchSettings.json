@@ -11,7 +11,8 @@
         "CASSANDRA_HOST": "localhost",
         "CASSANDRA_USER": "cassandra",
         "CASSANDRA_PASSWORD": "cassandra",
-        "CASSANDRA_SCHEMAS_DIRECTORY": "../Repository/Resources/Schemas"
+        "CASSANDRA_SCHEMAS_DIRECTORY": "../Repository/Resources/Schemas",
+        "SERVICE_STORAGE_ID" : "0"
       }
     }
   }

@@ -1,1 +1,0 @@
-CREATE INDEX IF NOT EXISTS ON storage.nodes_by_storage (key);

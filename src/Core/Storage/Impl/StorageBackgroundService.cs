@@ -21,6 +21,11 @@ public class StorageBackgroundService(
 
     protected override Task<Task> ExecuteAsync(CancellationToken stoppingToken)
     {
+        var generator = repository.CommittedOperationsEnumerator();
+        AcceptStateBy(generator);
+        
+        logger.LogInformation("State of data structure is restored ");
+        
         return Task.FromResult(Task.Run(() => BackgroundProcessing(stoppingToken), stoppingToken));
     }
 
@@ -33,50 +38,72 @@ public class StorageBackgroundService(
             while (!_tasks.IsEmpty)
             {
                 if (!_tasks.TryPeek(out var task)) continue;
-
+                
                 logger.LogDebug("New task: {task}. started to process..", task);
 
-                ProcessTask(task);
-                _tasks.TryDequeue(out var _);
+                var (isSuccess, payload) = await ProcessTask(task);
 
-                logger.LogDebug("Task completed successfully");
+                task.Payload = payload;
+                
+                if (isSuccess)
+                {
+                    _tasks.TryDequeue(out var _);
+                    logger.LogDebug("Task completed successfully");
+                }
+                else
+                {
+                    task.IsSuccess = false;
+                    _tasks.TryDequeue(out var _);
+                    logger.LogCritical("Error in this task processing: {task}", task);
+                }
             }
 
             await Task.Delay(50, stoppingToken);
         }
     }
-
-    private void ProcessTask(IStorageTask task)
+    
+    private async Task<Tuple<bool, string?>> ProcessTask(IStorageTask task)
     {
-        switch (task.OperationType)
+        var operation = new Operation(task.OperationType, task.Key, task.Payload);
+        var isCommitted = await repository.CommitOperation(operation);
+
+        if (!isCommitted)
+            return await Task.FromResult(new Tuple<bool, string?>(false, null));
+
+        var payload = await ProcessOperation(operation);
+        
+        return await Task.FromResult(new Tuple<bool, string?>(true, payload));
+    }
+
+    private async Task<string?> ProcessOperation(IOperation operation)
+    {
+        switch (operation.OperationType)
         {
             case OperationType.Insert:
             {
-                // TODO: attempt writing event in event store
-                _tree.Insert(SplayTree.CreateNode(task.Key, task.Payload!));
+                _tree.Insert(SplayTree.CreateNode(operation.Key, operation.Payload!));
                 break;
             }
             case OperationType.Search:
             {
-                // TODO: attempt writing event in event store
-                var node = _tree.Search(task.Key);
-                if (node != null)
-                    task.Payload = node.Value;
-                break;
+                var node = _tree.Search(operation.Key);
+                return await Task.FromResult(node?.Value);
             }
             case OperationType.Delete:
             {
-                // TODO: attempt writing event in event store
-                _tree.Delete(task.Key);
+                _tree.Delete(operation.Key);
                 break;
             }
         }
+
+        return await Task.FromResult<string?>(null);
     }
 
-    public void AcceptStateBy(IEnumerator<string> generator)
+    private async void AcceptStateBy(IEnumerator<Operation> generator)
     {
-        // TODO: event sourcing task
-        _tree.Delete("line for f***ing linter");
-        repository.CommitOperation(OperationType.Delete, "line for linter", null);
+        while (generator.MoveNext())
+        {
+            await ProcessOperation(generator.Current);
+        }
     }
 }

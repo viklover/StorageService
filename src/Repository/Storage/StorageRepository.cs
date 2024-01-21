@@ -1,7 +1,9 @@
+using Cassandra.Mapping;
 using Core.Storage.Interfaces;
-using Cassandra;
 using Core.Storage.Interfaces.Operations;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic.CompilerServices;
+using Repository.Storage.Entities;
 
 namespace Repository.Storage;
 
@@ -10,55 +12,57 @@ namespace Repository.Storage;
 /// </summary>
 /// <param name="logger">Repository logger</param>
 /// <param name="driver">Storage cassandra driver</param>
-public class StorageRepository(ILogger<StorageRepository> logger, StorageCassandraDriver driver)
-    : IStorageRepository
+public class StorageRepository(ILogger<IStorageRepository> logger, StorageCassandraDriver driver) : IStorageRepository
 {
-    private static readonly string? SchemasDirectory =
-        Environment.GetEnvironmentVariable("CASSANDRA_SCHEMAS_DIRECTORY");
+    private static readonly short StorageId =
+        ShortType.FromString(Environment.GetEnvironmentVariable("SERVICE_STORAGE_ID")); // default value is 0
 
     /// <summary>
-    /// Create required keyspaces, tables, types, indexes
-    /// if they aren't exists
+    /// Save operation in events store
     /// </summary>
-    public void PrepareSchemas()
+    /// <returns>Success of processed operation</returns>
+    public async Task<bool> CommitOperation(IOperation operation)
     {
-        logger.LogDebug("Preparing schema in cassandra..");
-
-        if (!Directory.Exists(SchemasDirectory))
-        {
-            logger.LogError("'CASSANDRA_SCHEMAS_DIRECTORY' env variable is not exists");
-            return;
-        }
-
-        const string message = "  --> {SchemaName}.. {Status}";
+        logger.LogDebug("Commiting operation: {operation}", operation);
 
         using var session = driver.Session();
 
-        foreach (var file in Directory.GetFiles(SchemasDirectory).OrderBy(f => f))
+        const string query = "INSERT INTO storages.events_by_storage " +
+                             "(storage_id, time, operation_type, key, payload) VALUES " +
+                             "(?, toUnixTimestamp(now()), ?, ?, ?)";
+        try
         {
-            var fileName = Path.GetFileName(file);
+            var preparedStatement = await session.PrepareAsync(query);
+            var statement = preparedStatement.Bind(StorageId,
+                (sbyte)operation.OperationType,
+                operation.Key,
+                operation.Payload);
 
-            try
-            {
-                session.Execute(File.ReadAllText(file));
-
-                logger.LogDebug(message, fileName, "ok");
-            }
-            catch (QueryExecutionException exception)
-            {
-                logger.LogError(message, fileName, "not ok");
-                throw new Exception($"Applying schema error {exception}");
-            }
+            await session.ExecuteAsync(statement);
         }
+        catch (Exception exception)
+        {
+            logger.LogCritical("Cassandra driver exception: {exception}", exception);
+            return await Task.FromResult(false);
+        }
+
+        return await Task.FromResult(true);
     }
 
-    public IEnumerator<string> GetEventsEnumerator()
+    /// <summary>
+    /// Get generator for operations reading
+    /// </summary>
+    /// <returns>generator</returns>
+    public IEnumerator<Operation> CommittedOperationsEnumerator()
     {
-        throw new NotImplementedException();
-    }
+        using var session = driver.Session();
+        var mapper = new Mapper(session);
 
-    public bool CommitOperation(OperationType operationType, string key, string? payload)
-    {
-        throw new NotImplementedException();
+        var generator = mapper.Fetch<Event>("WHERE storage_id = ?", StorageId);
+
+        foreach (var eventModel in generator)
+        {
+            yield return new Operation((OperationType)eventModel.OperationType, eventModel.Key, eventModel.Payload);
+        }
     }
 }

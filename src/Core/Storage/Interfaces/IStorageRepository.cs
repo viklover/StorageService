@@ -9,20 +9,14 @@ namespace Core.Storage.Interfaces;
 public interface IStorageRepository
 {
     /// <summary>
-    /// Create required keyspaces, tables, types, indexes
-    /// if they aren't exists
-    /// </summary>
-    void PrepareSchemas();
-
-    /// <summary>
-    /// Get generator for events reading
-    /// </summary>
-    /// <returns>generator</returns>
-    IEnumerator<string> GetEventsEnumerator();
-
-    /// <summary>
     /// Save operation in events store
     /// </summary>
     /// <returns>Success of processed operation</returns>
-    bool CommitOperation(OperationType operationType, string key, string? payload);
+    Task<bool> CommitOperation(IOperation operation);
+    
+    /// <summary>
+    /// Get generator for committed operations reading
+    /// </summary>
+    /// <returns>generator</returns>
+    IEnumerator<Operation> CommittedOperationsEnumerator();
 }
