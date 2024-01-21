@@ -1,1 +1,1 @@
-CREATE TABLE IF NOT EXISTS storages.events_by_storage (storage_id SMALLINT, time TIMESTAMP, operation_type TINYINT, key TEXT, payload TEXT, PRIMARY KEY ((storage_id), time));
+CREATE TABLE IF NOT EXISTS storages.events_by_storage (storage_id SMALLINT, time TIMESTAMP, operation_type TINYINT, key TEXT, payload TEXT, PRIMARY KEY ((storage_id), time)) WITH CLUSTERING ORDER BY (time ASC);
