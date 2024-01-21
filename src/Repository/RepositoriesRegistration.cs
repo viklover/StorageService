@@ -19,8 +19,8 @@ public static class RepositoriesRegistration
 
     public static IServiceProvider PrepareRepositories(this IServiceProvider services)
     {
-        var repository = (StorageRepository) services.GetRequiredService(typeof(IStorageRepository));
-        repository.PrepareSchemas();
+        var driver = (StorageCassandraDriver) services.GetRequiredService(typeof(StorageCassandraDriver));
+        driver.PrepareSchemas();
 
         MappingConfiguration.Global.Define<CassandraMappers>();
 
