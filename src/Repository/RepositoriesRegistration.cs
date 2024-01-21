@@ -1,4 +1,7 @@
+using Cassandra.Mapping;
 using Core.Storage.Interfaces;
+using Repository.Configurations;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Repository;
@@ -18,6 +21,9 @@ public static class RepositoriesRegistration
     {
         var repository = (StorageRepository) services.GetRequiredService(typeof(IStorageRepository));
         repository.PrepareSchemas();
+
+        MappingConfiguration.Global.Define<CassandraMappers>();
+
         return services;
     }
 }

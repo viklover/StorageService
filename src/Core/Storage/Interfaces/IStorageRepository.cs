@@ -15,14 +15,14 @@ public interface IStorageRepository
     void PrepareSchemas();
 
     /// <summary>
-    /// Get generator for events reading
+    /// Get generator for committed operations reading
     /// </summary>
     /// <returns>generator</returns>
-    IEnumerator<string> GetEventsEnumerator();
+    IEnumerator<Operation> CommittedOperationsEnumerator();
 
     /// <summary>
     /// Save operation in events store
     /// </summary>
     /// <returns>Success of processed operation</returns>
-    bool CommitOperation(OperationType operationType, string key, string? payload);
+    Task<bool> CommitOperation(Operation operation);
 }

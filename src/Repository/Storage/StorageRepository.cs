@@ -1,7 +1,10 @@
-using Core.Storage.Interfaces;
 using Cassandra;
+using Cassandra.Mapping;
+using Core.Storage.Interfaces;
 using Core.Storage.Interfaces.Operations;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic.CompilerServices;
+using Repository.Storage.Entities;
 
 namespace Repository.Storage;
 
@@ -15,6 +18,9 @@ public class StorageRepository(ILogger<StorageRepository> logger, StorageCassand
 {
     private static readonly string? SchemasDirectory =
         Environment.GetEnvironmentVariable("CASSANDRA_SCHEMAS_DIRECTORY");
+
+    private static readonly string? StorageId =
+        Environment.GetEnvironmentVariable("SERVICE_STORAGE_ID");
 
     /// <summary>
     /// Create required keyspaces, tables, types, indexes
@@ -52,13 +58,48 @@ public class StorageRepository(ILogger<StorageRepository> logger, StorageCassand
         }
     }
 
-    public IEnumerator<string> GetEventsEnumerator()
+    /// <summary>
+    /// Get generator for operations reading
+    /// </summary>
+    /// <returns>generator</returns>
+    public IEnumerator<Operation> CommittedOperationsEnumerator()
     {
-        throw new NotImplementedException();
+        using var session = driver.Session();
+        var mapper = new Mapper(session);
+
+        var generator = mapper.Fetch<Event>("SELECT * FROM storages.events_by_storage WHERE storage_id = ?");
+
+        foreach (var eventModel in generator)
+        {
+            yield return new Operation((OperationType)eventModel.OperationType, eventModel.Key, eventModel.Payload);
+        }
     }
 
-    public bool CommitOperation(OperationType operationType, string key, string? payload)
+    public async Task<bool> CommitOperation(Operation operation)
     {
-        throw new NotImplementedException();
+        logger.LogDebug("Commiting operation: {operation}", operation);
+
+        using var session = driver.Session();
+
+        const string query = "INSERT INTO storages.events_by_storage " +
+                             "(storage_id, time, operation_type, key, payload) VALUES " +
+                             "(?, toUnixTimestamp(now()), ?, ?, ?)";
+        try
+        {
+            var preparedStatement = await session.PrepareAsync(query);
+            var statement = preparedStatement.Bind(ShortType.FromString(StorageId),
+                (sbyte)operation.OperationType,
+                operation.Key,
+                operation.Payload);
+
+            await session.ExecuteAsync(statement);
+        }
+        catch (Exception exception)
+        {
+            logger.LogCritical("Cassandra driver exception: {exception}", exception);
+            return await Task.FromResult(false);
+        }
+
+        return await Task.FromResult(true);
     }
 }

@@ -33,21 +33,36 @@ public class StorageBackgroundService(
             while (!_tasks.IsEmpty)
             {
                 if (!_tasks.TryPeek(out var task)) continue;
-
+                
                 logger.LogDebug("New task: {task}. started to process..", task);
 
-                ProcessTask(task);
-                _tasks.TryDequeue(out var _);
+                var isSuccess = await ProcessTask(task);
 
-                logger.LogDebug("Task completed successfully");
+                if (isSuccess)
+                {
+                    _tasks.TryDequeue(out var _);
+                    logger.LogDebug("Task completed successfully");
+                }
+                else
+                {
+                    task.IsSuccess = false;
+                    _tasks.TryDequeue(out var _);
+                    logger.LogCritical("Error in this task processing: {task}", task);
+                }
             }
 
             await Task.Delay(50, stoppingToken);
         }
     }
 
-    private void ProcessTask(IStorageTask task)
+    private async Task<bool> ProcessTask(IStorageTask task)
     {
+        var operation = new Operation(task.OperationType, task.Key, task.Payload);
+        var isCommitted = await repository.CommitOperation(operation);
+
+        if (!isCommitted)
+            return await Task.FromResult(false);
+        
         switch (task.OperationType)
         {
             case OperationType.Insert:
@@ -71,12 +86,14 @@ public class StorageBackgroundService(
                 break;
             }
         }
+
+        return await Task.FromResult(true);
     }
 
-    public void AcceptStateBy(IEnumerator<string> generator)
+    public void AcceptStateBy(IEnumerator<Operation> generator)
     {
         // TODO: event sourcing task
-        _tree.Delete("line for f***ing linter");
-        repository.CommitOperation(OperationType.Delete, "line for linter", null);
+        // _tree.Delete("line for f***ing linter");
+        // repository.CommitOperation(OperationType.Delete, "line for linter", null);
     }
 }
