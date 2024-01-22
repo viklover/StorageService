@@ -1,3 +1,4 @@
+using Core.Exceptions;
 using Core.Storage.Impl.Tasks;
 using Core.Storage.Interfaces;
 using Core.Storage.Interfaces.Tasks;
@@ -12,32 +13,26 @@ public class SplayTreeStorageService(ILogger<SplayTreeStorageService> logger) : 
 {
     public ConcurrentQueue<IStorageTask> Tasks { get; } = new();
 
-    public Task SavePairAsync(string key, string value)
+    public void SavePairAsync(string key, string value)
     {
         var task = new StorageTask(OperationType.Insert, key, value);
-        
         AddTaskToQueue(task);
-        
-        return Task.CompletedTask;
     }
 
     public async Task<string?> GetValueByKey(string key)
     {
         var task = new StorageTask(OperationType.Search, key);
-        
         AddTaskToQueue(task);
         
         var result = await WaitResult(task);
+        
         return result.Payload;
     }
 
-    public Task DeletePairByKeyAsync(string key)
+    public void DeletePairByKeyAsync(string key)
     {
         var task = new StorageTask(OperationType.Delete, key);
-        
         AddTaskToQueue(task);
-        
-        return Task.CompletedTask;
     }
 
     private void AddTaskToQueue(IStorageTask task)
@@ -51,13 +46,19 @@ public class SplayTreeStorageService(ILogger<SplayTreeStorageService> logger) : 
     {
         return await Task.Run(async () =>
         {
-            while (true)
+            var currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+            
+            while (Tasks.Contains(operation))
             {
-                if (!Tasks.Contains(operation))
-                    return operation;
+                var delay = DateTimeOffset.Now.ToUnixTimeSeconds() - currentTime;
                 
-                await Task.Delay(50);
+                if (delay > 30)
+                    throw new TimeoutOccuredException();
+
+                await Task.Delay(10); // heh, 'how to save SOH'
             }
+            
+            return operation;
         });
     }
 }

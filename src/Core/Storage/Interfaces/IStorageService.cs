@@ -15,11 +15,11 @@ public interface IStorageService
     ConcurrentQueue<IStorageTask> Tasks { get; }
     
     /// <summary>
-    /// Save or update pair in storage
+    /// Save or update pair in storage (async)
     /// </summary>
     /// <param name="key">Variable name</param>
     /// <param name="value">Variable value</param>
-    Task SavePairAsync(string key, string value);
+    void SavePairAsync(string key, string value);
     
     /// <summary>
     /// Get value from storage by key
@@ -29,8 +29,8 @@ public interface IStorageService
     Task<string?> GetValueByKey(string key);
     
     /// <summary>
-    /// Delete in storage pair by key
+    /// Delete in storage pair by key (async)
     /// </summary>
     /// <param name="key">Variable key</param>
-    Task DeletePairByKeyAsync(string key);
+    void DeletePairByKeyAsync(string key);
 }

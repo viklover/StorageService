@@ -16,15 +16,15 @@ namespace Api.Controllers;
 public class StorageController(IStorageService storageService) : ControllerBase
 {
     /// <summary>
-    /// Put variable in storage
+    /// Put variable in storage (async)
     /// </summary>
     /// <param name="key">Variable name</param>
     /// <param name="valueDto">Variable value</param>
     /// <response code="200">Success</response>
     [HttpPut]
-    public async Task PutValueByKey(string key, [FromBody] ValueDto valueDto)
+    public void PutValueByKey(string key, [FromBody] ValueDto valueDto)
     {
-        await storageService.SavePairAsync(key, valueDto.Value);
+        storageService.SavePairAsync(key, valueDto.Value);
     }
 
     /// <summary>
@@ -34,6 +34,7 @@ public class StorageController(IStorageService storageService) : ControllerBase
     /// <returns>Variable value</returns>
     /// <response code="200">Success</response>
     /// <response code="404">Variable is not exists</response>
+    /// <response code="503">Waiting too long for results. Timeout</response>
     [HttpGet]
     public async Task<string> GetValueByKey(string key)
     {
@@ -48,13 +49,13 @@ public class StorageController(IStorageService storageService) : ControllerBase
     }
 
     /// <summary>
-    /// Delete pair by variable name
+    /// Delete pair by variable name (async)
     /// </summary>
     /// <param name="key">Variable name</param>
     /// <response code="200">Success</response>
     [HttpDelete]
-    public async Task DeletePairByKey(string key)
+    public void DeletePairByKey(string key)
     {
-        await storageService.DeletePairByKeyAsync(key);
+        storageService.DeletePairByKeyAsync(key);
     }
 }

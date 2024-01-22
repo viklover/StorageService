@@ -6,17 +6,17 @@ using Core.Storage.Impl.Tree.Trees;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
+using Core.Storage.Impl.Tree;
 
 namespace Core.Storage.Impl;
 
 public class StorageBackgroundService(
     IStorageService service,
     IStorageRepository repository,
+    IBinaryTree tree,
     ILogger<StorageBackgroundService> logger)
     : BackgroundService
 {
-    private readonly SplayTree _tree = new();
-
     private readonly ConcurrentQueue<IStorageTask> _tasks = service.Tasks;
 
     protected override Task<Task> ExecuteAsync(CancellationToken stoppingToken)
@@ -40,7 +40,7 @@ public class StorageBackgroundService(
                 if (!_tasks.TryPeek(out var task)) continue;
                 
                 logger.LogDebug("New task: {task}. started to process..", task);
-
+                
                 var (isSuccess, payload) = await ProcessTask(task);
 
                 task.Payload = payload;
@@ -58,7 +58,7 @@ public class StorageBackgroundService(
                 }
             }
 
-            await Task.Delay(50, stoppingToken);
+            await Task.Delay(10, stoppingToken);
         }
     }
     
@@ -81,17 +81,17 @@ public class StorageBackgroundService(
         {
             case OperationType.Insert:
             {
-                _tree.Insert(SplayTree.CreateNode(operation.Key, operation.Payload!));
+                tree.Insert(SplayTree.CreateNode(operation.Key, operation.Payload!));
                 break;
             }
             case OperationType.Search:
             {
-                var node = _tree.Search(operation.Key);
+                var node = tree.Search(operation.Key);
                 return await Task.FromResult(node?.Value);
             }
             case OperationType.Delete:
             {
-                _tree.Delete(operation.Key);
+                tree.Delete(operation.Key);
                 break;
             }
         }
