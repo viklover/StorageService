@@ -11,7 +11,7 @@ public class FakeStorageService : IStorageService
 
     public ConcurrentQueue<IStorageTask> Tasks { get; } = new();
     
-    public Task SavePairAsync(string key, string value)
+    public void SavePairAsync(string key, string value)
     {
         throw new NotImplementedException();
     }
@@ -21,7 +21,7 @@ public class FakeStorageService : IStorageService
         throw new NotImplementedException();
     }
 
-    public Task DeletePairByKeyAsync(string key)
+    public void DeletePairByKeyAsync(string key)
     {
         throw new NotImplementedException();
     }

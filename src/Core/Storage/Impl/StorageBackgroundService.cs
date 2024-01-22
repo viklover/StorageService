@@ -40,7 +40,7 @@ public class StorageBackgroundService(
                 if (!_tasks.TryPeek(out var task)) continue;
                 
                 logger.LogDebug("New task: {task}. started to process..", task);
-
+                
                 var (isSuccess, payload) = await ProcessTask(task);
 
                 task.Payload = payload;
