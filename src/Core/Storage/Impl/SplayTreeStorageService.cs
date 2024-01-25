@@ -58,6 +58,8 @@ public class SplayTreeStorageService(ILogger<SplayTreeStorageService> logger) : 
                 await Task.Delay(10); // heh, 'how to save SOH'
             }
             
+            stopwatch.Stop();
+            
             return operation;
         });
     }
