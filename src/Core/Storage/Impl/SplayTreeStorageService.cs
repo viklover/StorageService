@@ -5,6 +5,7 @@ using Core.Storage.Interfaces.Tasks;
 using Core.Storage.Interfaces.Operations;
 
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 
 namespace Core.Storage.Impl;
@@ -44,15 +45,14 @@ public class SplayTreeStorageService(ILogger<SplayTreeStorageService> logger) : 
     
     private async Task<IStorageTask> WaitResult(IStorageTask operation)
     {
-        return await Task.Run(async () =>
+        return await Task.Run(async() =>
         {
-            var currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
             
-            while (Tasks.Contains(operation))
+            while (Tasks.Contains(operation)) // SOH issues
             {
-                var delay = DateTimeOffset.Now.ToUnixTimeSeconds() - currentTime;
-                
-                if (delay > 30)
+                if (stopwatch.ElapsedMilliseconds > 30000)
                     throw new TimeoutOccuredException();
 
                 await Task.Delay(10); // heh, 'how to save SOH'
