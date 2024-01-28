@@ -68,14 +68,14 @@ public class StorageBackgroundService(
         var isCommitted = await repository.CommitOperation(operation);
 
         if (!isCommitted)
-            return await Task.FromResult(new Tuple<bool, string?>(false, null));
+            return new Tuple<bool, string?>(false, null);
 
         var payload = await ProcessOperation(operation);
         
-        return await Task.FromResult(new Tuple<bool, string?>(true, payload));
+        return new Tuple<bool, string?>(true, payload);
     }
 
-    private async Task<string?> ProcessOperation(IOperation operation)
+    private Task<string?> ProcessOperation(IOperation operation)
     {
         switch (operation.OperationType)
         {
@@ -87,7 +87,7 @@ public class StorageBackgroundService(
             case OperationType.Search:
             {
                 var node = tree.Search(operation.Key);
-                return await Task.FromResult(node?.Value);
+                return Task.FromResult(node?.Value);
             }
             case OperationType.Delete:
             {
@@ -96,7 +96,7 @@ public class StorageBackgroundService(
             }
         }
 
-        return await Task.FromResult<string?>(null);
+        return Task.FromResult<string?>(null);
     }
 
     private async void AcceptStateBy(IEnumerator<Operation> generator)
