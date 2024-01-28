@@ -7,7 +7,7 @@ namespace Repository.Storage;
 /// Storage cassandra driver.
 /// Represents class for giving sessions
 /// </summary>
-public class StorageCassandraDriver(ILogger<StorageCassandraDriver> logger)
+public class StorageCassandraDriver(ILogger<StorageCassandraDriver> logger) : IDisposable
 {
     private readonly Cluster _cluster = Cluster.Builder()
         .AddContactPoint(Environment.GetEnvironmentVariable("CASSANDRA_HOST"))
@@ -62,7 +62,7 @@ public class StorageCassandraDriver(ILogger<StorageCassandraDriver> logger)
         }
     }
 
-    ~StorageCassandraDriver()
+    public void Dispose()
     {
         _cluster.Dispose();
     }
