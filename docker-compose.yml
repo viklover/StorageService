@@ -1,4 +1,4 @@
-version: '2.9'
+version: '2.4'
 
 services:
   application:
@@ -20,11 +20,12 @@ services:
     volumes:
       - db_data:/var/lib/cassandra
     healthcheck:
-      test: [ "CMD-SHELL", "[ $$(nodetool statusgossip) = running ]" ]
+      test: ["CMD", "cqlsh", "-e", "describe keyspaces"]
       interval: 20s
       timeout: 5s
       retries: 5
-  
+      start_period: 60s
+
 volumes:
   db_data:
     driver: local
