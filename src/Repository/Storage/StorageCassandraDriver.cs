@@ -65,5 +65,7 @@ public class StorageCassandraDriver(ILogger<StorageCassandraDriver> logger) : ID
     public void Dispose()
     {
         _cluster.Dispose();
+
+        GC.SuppressFinalize(this);
     }
 }
