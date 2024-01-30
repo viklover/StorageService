@@ -62,15 +62,14 @@ public class StorageBackgroundService(
         }
     }
     
-    private async Task<Tuple<bool, string?>> ProcessTask(IStorageTask task)
+    private async Task<Tuple<bool, string?>> ProcessTask(IOperation task)
     {
-        var operation = new Operation(task.OperationType, task.Key, task.Payload);
-        var isCommitted = await repository.CommitOperation(operation);
+        var isCommitted = await repository.CommitOperation(task);
 
         if (!isCommitted)
             return new Tuple<bool, string?>(false, null);
 
-        var payload = await ProcessOperation(operation);
+        var payload = await ProcessOperation(task);
         
         return new Tuple<bool, string?>(true, payload);
     }
