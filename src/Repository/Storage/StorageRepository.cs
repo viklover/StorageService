@@ -43,10 +43,10 @@ public class StorageRepository(ILogger<IStorageRepository> logger, StorageCassan
         catch (Exception exception)
         {
             logger.LogCritical("Cassandra driver exception: {exception}", exception);
-            return await Task.FromResult(false);
+            return false;
         }
 
-        return await Task.FromResult(true);
+        return true;
     }
 
     /// <summary>
