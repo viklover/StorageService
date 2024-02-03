@@ -110,8 +110,8 @@ public class SplayTree : IBinaryTree
         }
         else if (node.Right != null && node.Left != null)
         {
-            var minimumNode = TreeSearchMinimum(node.Right)!;
-            Root = Splay(minimumNode)!;
+            var minimumNode = TreeSearchMinimum(node.Right);
+            Root = Splay(minimumNode);
             Root.Parent = null;
 
             Root.Left = node.Left;
@@ -135,7 +135,7 @@ public class SplayTree : IBinaryTree
     /// <param name="x">Search node</param>
     /// <exception cref="Exception">Throws when tree consistency is broken or author is dumb</exception>
     /// <returns>New root of tree - search node</returns>
-    private static INode? Splay(INode x)
+    private static INode Splay(INode x)
     {
         if (x.Parent == null)
             return x;
@@ -242,7 +242,6 @@ public class SplayTree : IBinaryTree
     /// <summary>
     /// Searching for a node instance in the tree by key
     /// </summary>
-    /// <param name="root">Root node of tree</param>
     /// <param name="key">Node key</param>
     /// <returns>Found node or closest parent or null</returns>
     private INode? TreeSearch(string key)
@@ -277,9 +276,9 @@ public class SplayTree : IBinaryTree
     /// <summary>
     /// Searching a minimum node in the tree
     /// </summary>
-    /// <param name="root">Root node of tree</param>
+    /// <param name="node">Root node of tree</param>
     /// <returns>Minimum node</returns>
-    private static INode? TreeSearchMinimum(INode node)
+    private static INode TreeSearchMinimum(INode node)
     {
         var i = node;
 
